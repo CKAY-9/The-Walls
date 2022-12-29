@@ -15,9 +15,10 @@ public class TNTSpawn extends Event {
     @Override
     public void run() {
         for (Player p : Bukkit.getOnlinePlayers()) {
+            if (!Utils.isAlive(p)) continue;
             p.sendMessage(Utils.formatText("&c&lYikes! Watch out for the TNT..."));
             p.playSound(p.getLocation(), Sound.ENTITY_TNT_PRIMED, 255, 1);
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 10; i++) {
                 World.world.spawnEntity(p.getLocation(), EntityType.PRIMED_TNT);
             }
         }

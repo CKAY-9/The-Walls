@@ -20,26 +20,24 @@ public class PlayerDeath implements Listener {
         e.setDeathMessage("");
 
         Player ply = e.getEntity();
-        ply.spigot().respawn();
         ply.setGameMode(GameMode.SPECTATOR);
         Bukkit.broadcastMessage(Utils.formatText("&c" + ply.getName() + " has been eliminated from The Walls!"));
 
         for (Team t : Game.aliveTeams) {
             for (Player p : t.members) {
-                t.alive = false;
-                if (p.getGameMode() != GameMode.SPECTATOR || p.getStatistic(Statistic.DEATHS) <= 0) {
+                if (Utils.isAlive(p)) {
                     t.alive = true;
                     break;
                 }
+                t.alive = false;
             }
             if (!t.alive) {
                 Bukkit.broadcastMessage(Utils.formatText(t.teamColor + t.teamName + "&c team has been eliminated from The Walls!"));
                 Game.aliveTeams.remove(t);
-                break;
             }
         }
 
-        if (Game.aliveTeams.size() == 1) {
+        if (Game.aliveTeams.size() <= 1) {
             Team winningTeam = Game.aliveTeams.get(0);
             Bukkit.broadcastMessage(Utils.formatText(winningTeam.teamColor + winningTeam.teamName + "&2 has won The Walls!"));
             Game.end();

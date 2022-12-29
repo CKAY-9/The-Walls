@@ -5,10 +5,12 @@ import ca.camerxn.thewalls.Walls.Game;
 import ca.camerxn.thewalls.Walls.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class WForceTeam implements CommandExecutor {
     @Override
@@ -89,16 +91,17 @@ public class WForceTeam implements CommandExecutor {
                     }
                 }
             }
-            // force respawn the player
-            if (target.getGameMode() == GameMode.SPECTATOR) {
-                target.spigot().respawn();
-                target.setGameMode(GameMode.SURVIVAL);
-            }
 
             Team finalTeam = Team.getPlayerTeam(target);
             if (finalTeam != null) {
                 target.setDisplayName(Utils.formatText(finalTeam.teamColor + "[" + finalTeam.teamName + "] " + target.getName()));
                 target.setPlayerListName(Utils.formatText(finalTeam.teamColor + "[" + finalTeam.teamName + "] " + target.getName()));
+                target.getInventory().clear();
+                target.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 32));
+                if (!Utils.isAlive(target)) {
+                    target.spigot().respawn();
+                    target.setGameMode(GameMode.SURVIVAL);
+                }
             }
         } catch (Exception e) {
             sender.sendMessage(Utils.formatText("&cArguments provided aren't valid!"));

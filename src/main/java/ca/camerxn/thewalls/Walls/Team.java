@@ -60,6 +60,8 @@ public class Team {
 
     public void readyPlayers() {
         for (Player ply : members) {
+            ply.setHealth(20);
+            ply.setSaturation(20);
             ply.getInventory().clear();
             ply.sendTitle(Utils.formatText("&6&lThe Walls"), Utils.formatText("&cLast Team Standing Wins!"), 10, 80, 20);
             ply.playSound(ply.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 255, 1);

@@ -21,12 +21,13 @@ public class LocationSwap extends Event {
         int i = 0;
         // fill locations of players
         for (Player p : Bukkit.getOnlinePlayers()) {
-            if (p.getGameMode() != GameMode.SURVIVAL) continue; // filter out spectators
+            if (!Utils.isAlive(p)) continue;
             locations.add(p.getLocation());
             i++;
         }
         int c = 0;
         for (Player p : Bukkit.getOnlinePlayers()) {
+            if (!Utils.isAlive(p)) continue;
             c = (c + 1) % locations.size(); // Loop back around to 0
             p.teleport(locations.get(c));
             p.sendMessage(Utils.formatText("&9You have been teleported to a player's previous position!"));

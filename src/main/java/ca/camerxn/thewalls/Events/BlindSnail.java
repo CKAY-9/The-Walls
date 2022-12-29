@@ -17,6 +17,7 @@ public class BlindSnail extends Event {
     @Override
     public void run() {
         for (Player p : Bukkit.getOnlinePlayers()) {
+            if (!Utils.isAlive(p)) continue;
             p.sendMessage(Utils.formatText("&5You have been turned into a &c&lBLIND SNAIL&r&5."));
             p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 100, 10, true));
             p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100, 3, true));

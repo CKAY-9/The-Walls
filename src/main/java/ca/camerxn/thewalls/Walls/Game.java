@@ -163,9 +163,6 @@ public class Game {
                     timeUntilBorderClose = obj.getScore(Utils.formatText("&6Borders closing in " + borderCloseTimer + "s"));
                 }
                 timeUntilBorderClose.setScore(96);
-
-                eventTimer--;
-                borderCloseTimer--;
             } else {
                 timeRemaining = obj.getScore(Utils.formatText("&6Preparation Time: " + (prepTime - time) + "s"));
             }
@@ -188,7 +185,12 @@ public class Game {
                 // Loop through team members
                 for (Player member : t.members) {
                     if (member == null) continue;
-                    Score tMember = obj.getScore(Utils.formatText(t.teamColor + " - " + member.getName()));
+                    Score tMember;
+                    if (Utils.isAlive(member)) {
+                        tMember = obj.getScore(Utils.formatText(t.teamColor + " - " + member.getName() + "&r - &2ALIVE"));
+                    } else {
+                        tMember = obj.getScore(Utils.formatText(t.teamColor + " - " + member.getName() + "&r - &cDEAD"));
+                    }
                     tMember.setScore(currScore);
                     currScore--;
                 }
@@ -197,6 +199,10 @@ public class Game {
             p.setScoreboard(board);
         }
         time++;
+        if (wallsFallen) {
+            eventTimer--;
+            borderCloseTimer--;
+        }
     }
 
 }
