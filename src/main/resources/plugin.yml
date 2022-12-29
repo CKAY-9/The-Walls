@@ -1,0 +1,13 @@
+name: TheWalls
+version: '${project.version}'
+main: ca.camerxn.thewalls.TheWalls
+api-version: 1.19
+authors: [ Camerxn ]
+description: Play The Walls in any Minecraft world
+commands:
+  wstart:
+    description: Start a new game of The Walls
+  wend:
+    description: End the ongoing game of The Walls
+  wforceteam:
+    description: Switch/Respawn a player to a team
