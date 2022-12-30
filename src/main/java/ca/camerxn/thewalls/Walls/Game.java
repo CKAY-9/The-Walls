@@ -217,6 +217,7 @@ public class Game {
             }
             borderCloseTimer--;
         }
+        Utils.checkWinner();
     }
 
 }

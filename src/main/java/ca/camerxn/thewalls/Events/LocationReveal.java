@@ -7,12 +7,9 @@ import ca.camerxn.thewalls.Walls.Team;
 import ca.camerxn.thewalls.Walls.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.SpectralArrow;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 
 import java.util.Random;
 
@@ -25,6 +22,7 @@ public class LocationReveal extends Event {
     public void run() {
         for (Team t : Game.aliveTeams) {
             if (!t.alive) continue;
+            if (t.members.size() == 0) continue;
             int r = new Random().nextInt(t.members.size());
             Player p = t.members.get(r);
             while (!Utils.isAlive(p)) {
