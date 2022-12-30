@@ -1,5 +1,6 @@
 package ca.camerxn.thewalls.Commands;
 
+import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.Utils;
 import ca.camerxn.thewalls.Walls.Game;
 import ca.camerxn.thewalls.Walls.Team;
@@ -68,13 +69,13 @@ public class WForceTeam implements CommandExecutor {
                 Team prev = Team.getPlayerTeam(target);
 
                 int teamID = 0;
-                if (newTeam.equalsIgnoreCase("blue")) {
+                if (newTeam.equalsIgnoreCase(Config.data.getString("teams.one.name").toLowerCase())) {
                     teamID = 1;
                 }
-                if (newTeam.equalsIgnoreCase("yellow")) {
+                if (newTeam.equalsIgnoreCase(Config.data.getString("teams.two.name").toLowerCase())) {
                     teamID = 2;
                 }
-                if (newTeam.equalsIgnoreCase("green")) {
+                if (newTeam.equalsIgnoreCase(Config.data.getString("teams.three.name").toLowerCase())) {
                     teamID = 3;
                 }
 
@@ -97,7 +98,7 @@ public class WForceTeam implements CommandExecutor {
                 target.setDisplayName(Utils.formatText(finalTeam.teamColor + "[" + finalTeam.teamName + "] " + target.getName()));
                 target.setPlayerListName(Utils.formatText(finalTeam.teamColor + "[" + finalTeam.teamName + "] " + target.getName()));
                 target.getInventory().clear();
-                target.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 8));
+                target.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, Config.data.getInt("players.spawn.steakAmount")));
                 if (!Utils.isAlive(target)) {
                     target.spigot().respawn();
                     target.setGameMode(GameMode.SURVIVAL);

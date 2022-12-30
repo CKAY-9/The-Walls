@@ -1,5 +1,6 @@
 package ca.camerxn.thewalls.Events;
 
+import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.Utils;
 import ca.camerxn.thewalls.Walls.Game;
 import ca.camerxn.thewalls.Walls.World;
@@ -61,7 +62,7 @@ public class SupplyChest extends Event{
 
     @Override
     public void run() {
-        double reducer = 0.85;
+        double reducer = 1 - Config.data.getDouble("events.supplyChest.allowedRegionPercentageOfSize");
         int[] positionOne = new int[]{(int) (World.positionOne[0] - (Game.size * reducer)), (int) (World.positionOne[1] - (Game.size * reducer))};
         int[] positionTwo = new int[]{(int) (World.positionTwo[0] + (Game.size * reducer)), (int) (World.positionTwo[1] + (Game.size * reducer))};
 

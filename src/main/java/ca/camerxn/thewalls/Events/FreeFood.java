@@ -1,5 +1,6 @@
 package ca.camerxn.thewalls.Events;
 
+import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.Utils;
 import ca.camerxn.thewalls.Walls.World;
 import org.bukkit.Bukkit;
@@ -15,12 +16,12 @@ import org.bukkit.potion.PotionEffectType;
 class HandleChickens {
     Chicken chicken;
     int runnable;
-    int countdown = 5;
+    int countdown = Config.data.getInt("events.gregs.timer");
 
     public HandleChickens(Chicken _chicken, Player player) {
         chicken = _chicken;
         chicken.setAdult();
-        chicken.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 5 * 20, 2, true));
+        chicken.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Config.data.getInt("events.gregs.timer") * 20, Config.data.getInt("events.gregs.speed"), true));
         chicken.setCustomName("Greg");
         runnable = Bukkit.getScheduler().scheduleSyncRepeatingTask(Utils.getPlugin(), () -> {
             if (countdown <= 0) {
@@ -48,7 +49,7 @@ public class FreeFood extends Event {
             p.getInventory().addItem(p.getInventory().getItemInOffHand());
             p.getInventory().setItemInOffHand(new ItemStack(Material.WHEAT_SEEDS, 32));
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < Config.data.getInt("events.gregs.amount"); i++) {
                 Chicken chicken = (Chicken) World.world.spawnEntity(p.getLocation(), EntityType.CHICKEN);
                 new HandleChickens(chicken, p);
             }

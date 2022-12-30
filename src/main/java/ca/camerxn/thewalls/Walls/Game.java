@@ -1,5 +1,6 @@
 package ca.camerxn.thewalls.Walls;
 
+import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.Events.*;
 import ca.camerxn.thewalls.Utils;
 import org.bukkit.Bukkit;
@@ -74,12 +75,18 @@ public class Game {
         }
 
         // Register events
-        new TNTSpawn("TNT Spawn");
-        new BlindSnail("Blind Snail");
-        new LocationSwap("Player Location Swap");
-        new SupplyChest("Supply Chest");
-        new FreeFood("Free Food / Chicken Explosion");
-        new LocationReveal("Location Reveal");
+        if (Config.data.getBoolean("events.tnt.enabled"))
+            new TNTSpawn("TNT Spawn");
+        if (Config.data.getBoolean("events.blindSnail.enabled"))
+            new BlindSnail("Blind Snail");
+        if (Config.data.getBoolean("events.locationSwap.enabled"))
+            new LocationSwap("Player Location Swap");
+        if (Config.data.getBoolean("events.supplyChest.enabled"))
+            new SupplyChest("Supply Chest");
+        if (Config.data.getBoolean("events.gregs.enabled"))
+            new FreeFood("Free Food / Chicken Explosion");
+        if (Config.data.getBoolean("events.reveal.enabled"))
+            new LocationReveal("Location Reveal");
 
         started = true;
         time = 0;
@@ -141,25 +148,27 @@ public class Game {
                 timeRemaining = obj.getScore(Utils.formatText("&c&lTHE WALLS ARE DOWN!"));
                 if (eventTimer <= 0) {
                     // Run an event
-                    int rnd = new Random().nextInt(Events.events.size());
-                    Events.events.get(rnd).run();
+                    if (Events.events.size() >= 1) {
+                        int rnd = new Random().nextInt(Events.events.size());
+                        Events.events.get(rnd).run();
 
-                    // Reset timer
-                    eventTimer = eventCooldown;
+                        // Reset timer
+                        eventTimer = eventCooldown;
+                    }
                 }
-                // TODO: Implement border timer
-                Score timeUntilEvent = obj.getScore(Utils.formatText("&6Event in " + eventTimer + "s"));
-                timeUntilEvent.setScore(97);
+                if (Events.events.size() >= 1) {
+                    Score timeUntilEvent = obj.getScore(Utils.formatText("&6Event in " + eventTimer + "s"));
+                    timeUntilEvent.setScore(97);
+                }
 
                 Score timeUntilBorderClose;
                 if (borderCloseTimer <= 0) {
                     // Border are closing
                     timeUntilBorderClose = obj.getScore(Utils.formatText("&c&lBORDERS CLOSING IN"));
-
                     if (!borderClosing) {
                         p.playSound(p.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 255, 1);
                         p.sendMessage(Utils.formatText("&c&lThe Borders are closing in!"));
-                        World.world.getWorldBorder().setSize((double) size / 6, borderCloseSpeed);
+                        World.world.getWorldBorder().setSize((double) size * Config.data.getDouble("world.borderShrinkPercentageOfSize"), borderCloseSpeed);
                         borderClosing = true;
                     }
                 } else {
@@ -203,7 +212,9 @@ public class Game {
         }
         time++;
         if (wallsFallen) {
-            eventTimer--;
+            if (Events.events.size() >= 1) {
+                eventTimer--;
+            }
             borderCloseTimer--;
         }
     }

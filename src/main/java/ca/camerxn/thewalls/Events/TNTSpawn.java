@@ -1,5 +1,6 @@
 package ca.camerxn.thewalls.Events;
 
+import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.Utils;
 import ca.camerxn.thewalls.Walls.World;
 import org.bukkit.Bukkit;
@@ -18,7 +19,7 @@ public class TNTSpawn extends Event {
             if (!Utils.isAlive(p)) continue;
             p.sendMessage(Utils.formatText("&c&lYikes! Watch out for the TNT..."));
             p.playSound(p.getLocation(), Sound.ENTITY_TNT_PRIMED, 255, 1);
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < Config.data.getInt("events.tnt.amount"); i++) {
                 World.world.spawnEntity(p.getLocation(), EntityType.PRIMED_TNT);
             }
         }

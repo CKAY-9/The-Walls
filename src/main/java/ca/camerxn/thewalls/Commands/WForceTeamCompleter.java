@@ -1,5 +1,6 @@
 package ca.camerxn.thewalls.Commands;
 
+import ca.camerxn.thewalls.Config;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -16,10 +17,10 @@ public class WForceTeamCompleter implements TabCompleter {
         }
         if (args.length == 2) {
             ArrayList<String> teams = new ArrayList<>();
-            teams.add("red");
-            teams.add("green");
-            teams.add("yellow");
-            teams.add("blue");
+            teams.add(Config.data.getString("teams.zero.name"));
+            teams.add(Config.data.getString("teams.one.name"));
+            teams.add(Config.data.getString("teams.two.name"));
+            teams.add(Config.data.getString("teams.three.name"));
             return teams;
         }
 

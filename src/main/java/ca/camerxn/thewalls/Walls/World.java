@@ -1,5 +1,6 @@
 package ca.camerxn.thewalls.Walls;
 
+import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -20,6 +21,8 @@ public class World {
 
     // This method does take a while if the map size if >50;
     public static void save() {
+        if (!Config.data.getBoolean("world.saving")) return;
+
         Utils.getPlugin().getLogger().info("Saving original world data...");
 
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -49,6 +52,11 @@ public class World {
 
     // Replace all the blocks in the world with the originals
     public static void reset() {
+        world.getWorldBorder().setCenter(0, 0);
+        world.getWorldBorder().setSize(29999980);
+        world.getWorldBorder().setDamageAmount(0);
+
+        if (!Config.data.getBoolean("world.saving")) return;
 
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (p.isOp()) {
@@ -66,9 +74,6 @@ public class World {
             }
         }
 
-        world.getWorldBorder().setCenter(0, 0);
-        world.getWorldBorder().setSize(29999980);
-        world.getWorldBorder().setDamageAmount(0);
         originalWallBlocks.clear();
         originalBlocks.clear();
 

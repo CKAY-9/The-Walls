@@ -1,5 +1,6 @@
 package ca.camerxn.thewalls.Events;
 
+import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.Utils;
 import ca.camerxn.thewalls.Walls.Game;
 import ca.camerxn.thewalls.Walls.Team;
@@ -30,9 +31,11 @@ public class LocationReveal extends Event {
                 r = new Random().nextInt(t.members.size());
                 p = t.members.get(r);
             }
-            p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 200, 2));
+            p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 20 * Config.data.getInt("events.reveal.seconds"), 2));
             for (Player _p : Bukkit.getOnlinePlayers()) {
-                _p.sendMessage(Utils.formatText(t.teamColor + p.getName() + "&r of the " + t.teamColor + t.teamName + " team&r is at &6" + p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ() + "&r." ));
+                if (Config.data.getBoolean("events.reveal.displayCords")) {
+                    _p.sendMessage(Utils.formatText(t.teamColor + p.getName() + "&r of the " + t.teamColor + t.teamName + " team&r is at &6" + p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ() + "&r." ));
+                }
                 _p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 100, 1);
             }
         }

@@ -8,6 +8,9 @@ public final class TheWalls extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // Setup/Check for config file
+        Config.initializeData();
+
         // Register commands
         this.getCommand("wstart").setExecutor(new WStart());
         this.getCommand("wstart").setTabCompleter(new WStartCompleter());

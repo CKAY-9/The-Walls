@@ -1,5 +1,6 @@
 package ca.camerxn.thewalls.Listeners;
 
+import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.Utils;
 import ca.camerxn.thewalls.Walls.Game;
 import ca.camerxn.thewalls.Walls.World;
@@ -19,15 +20,17 @@ public class EntityDeath implements Listener {
         if (!Game.started) return;
 
         // Related to FreeFood event
-        if (e.getEntity().getCustomName() == null) return;
-        if (!(e.getEntity() instanceof Chicken)) return;
-        if (e.getEntity().getCustomName().toLowerCase().contains("greg")) {
-            int rnd = new Random().nextInt(10);
-            if (rnd == 9 && e.getEntity().getKiller() != null) {
-                e.getEntity().getKiller().getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE, 2));
-                e.getEntity().getKiller().sendMessage(Utils.formatText("&2Greg has spared you and has given you some &e&lGolden Apples!"));
-            } else {
-                World.world.createExplosion(e.getEntity().getLocation(), 4, true);
+        if (Config.data.getBoolean("events.gregs.enabled")) {
+            if (e.getEntity().getCustomName() == null) return;
+            if (!(e.getEntity() instanceof Chicken)) return;
+            if (e.getEntity().getCustomName().toLowerCase().contains("greg")) {
+                int rnd = new Random().nextInt(10);
+                if (rnd == 9 && e.getEntity().getKiller() != null) {
+                    e.getEntity().getKiller().getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE, 2));
+                    e.getEntity().getKiller().sendMessage(Utils.formatText("&2Greg has spared you and has given you some &e&lGolden Apples!"));
+                } else {
+                    World.world.createExplosion(e.getEntity().getLocation(), Config.data.getInt("events.gregs.power"), true);
+                }
             }
         }
     }
