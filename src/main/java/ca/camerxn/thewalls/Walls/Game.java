@@ -45,6 +45,7 @@ public class Game {
         World.positionOne[1] = starter.getLocation().getBlockZ() + size;
         World.positionTwo[0] = starter.getLocation().getBlockX() - size;
         World.positionTwo[1] = starter.getLocation().getBlockZ() - size;
+        World.world.setTime(1000);
 
         World.save();
         World.wallBlocks();
@@ -77,6 +78,8 @@ public class Game {
         new BlindSnail("Blind Snail");
         new LocationSwap("Player Location Swap");
         new SupplyChest("Supply Chest");
+        new FreeFood("Free Food / Chicken Explosion");
+        new LocationReveal("Location Reveal");
 
         started = true;
         time = 0;
@@ -156,7 +159,7 @@ public class Game {
                     if (!borderClosing) {
                         p.playSound(p.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 255, 1);
                         p.sendMessage(Utils.formatText("&c&lThe Borders are closing in!"));
-                        World.world.getWorldBorder().setSize((double) size / 8, borderCloseSpeed);
+                        World.world.getWorldBorder().setSize((double) size / 6, borderCloseSpeed);
                         borderClosing = true;
                     }
                 } else {

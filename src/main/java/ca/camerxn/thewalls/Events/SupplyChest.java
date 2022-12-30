@@ -61,7 +61,7 @@ public class SupplyChest extends Event{
 
     @Override
     public void run() {
-        double reducer = 0.75;
+        double reducer = 0.85;
         int[] positionOne = new int[]{(int) (World.positionOne[0] - (Game.size * reducer)), (int) (World.positionOne[1] - (Game.size * reducer))};
         int[] positionTwo = new int[]{(int) (World.positionTwo[0] + (Game.size * reducer)), (int) (World.positionTwo[1] + (Game.size * reducer))};
 

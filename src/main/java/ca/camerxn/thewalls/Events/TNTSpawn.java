@@ -18,7 +18,7 @@ public class TNTSpawn extends Event {
             if (!Utils.isAlive(p)) continue;
             p.sendMessage(Utils.formatText("&c&lYikes! Watch out for the TNT..."));
             p.playSound(p.getLocation(), Sound.ENTITY_TNT_PRIMED, 255, 1);
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 5; i++) {
                 World.world.spawnEntity(p.getLocation(), EntityType.PRIMED_TNT);
             }
         }

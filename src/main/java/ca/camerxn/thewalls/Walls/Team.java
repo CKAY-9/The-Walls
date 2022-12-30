@@ -69,7 +69,7 @@ public class Team {
             ply.setDisplayName(Utils.formatText(teamColor + "[" + teamName + "] " + ply.getName()));
             ply.setPlayerListName(Utils.formatText(teamColor + "[" + teamName + "] " + ply.getName()));
             ply.setGameMode(GameMode.SURVIVAL);
-            ply.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 32));
+            ply.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 8));
             ply.teleport(teamSpawn);
         }
     }

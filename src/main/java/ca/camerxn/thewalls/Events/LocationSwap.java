@@ -18,12 +18,10 @@ public class LocationSwap extends Event {
     @Override
     public void run() {
         ArrayList<Location> locations = new ArrayList<>();
-        int i = 0;
         // fill locations of players
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (!Utils.isAlive(p)) continue;
             locations.add(p.getLocation());
-            i++;
         }
         int c = 0;
         for (Player p : Bukkit.getOnlinePlayers()) {

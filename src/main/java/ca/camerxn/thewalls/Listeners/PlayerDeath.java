@@ -23,18 +23,21 @@ public class PlayerDeath implements Listener {
         ply.setGameMode(GameMode.SPECTATOR);
         Bukkit.broadcastMessage(Utils.formatText("&c" + ply.getName() + " has been eliminated from The Walls!"));
 
+        int i = 0;
         for (Team t : Game.aliveTeams) {
             for (Player p : t.members) {
+                t.alive = false;
                 if (Utils.isAlive(p)) {
                     t.alive = true;
                     break;
                 }
-                t.alive = false;
             }
+            Utils.getPlugin().getLogger().info(t.alive + " / " + t.teamName);
             if (!t.alive) {
                 Bukkit.broadcastMessage(Utils.formatText(t.teamColor + t.teamName + "&c team has been eliminated from The Walls!"));
-                Game.aliveTeams.remove(t);
+                Game.aliveTeams.remove(i);
             }
+            i++;
         }
 
         if (Game.aliveTeams.size() <= 1) {

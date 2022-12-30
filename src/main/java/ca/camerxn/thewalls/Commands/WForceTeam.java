@@ -97,7 +97,7 @@ public class WForceTeam implements CommandExecutor {
                 target.setDisplayName(Utils.formatText(finalTeam.teamColor + "[" + finalTeam.teamName + "] " + target.getName()));
                 target.setPlayerListName(Utils.formatText(finalTeam.teamColor + "[" + finalTeam.teamName + "] " + target.getName()));
                 target.getInventory().clear();
-                target.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 32));
+                target.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 8));
                 if (!Utils.isAlive(target)) {
                     target.spigot().respawn();
                     target.setGameMode(GameMode.SURVIVAL);

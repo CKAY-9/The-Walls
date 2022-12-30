@@ -1,10 +1,7 @@
 package ca.camerxn.thewalls;
 
 import ca.camerxn.thewalls.Commands.*;
-import ca.camerxn.thewalls.Listeners.PlayerAttack;
-import ca.camerxn.thewalls.Listeners.PlayerDeath;
-import ca.camerxn.thewalls.Listeners.PlayerJoin;
-import ca.camerxn.thewalls.Listeners.PlayerLeave;
+import ca.camerxn.thewalls.Listeners.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TheWalls extends JavaPlugin {
@@ -23,6 +20,7 @@ public final class TheWalls extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new PlayerAttack(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
         this.getServer().getPluginManager().registerEvents(new PlayerDeath(), this);
+        this.getServer().getPluginManager().registerEvents(new EntityDeath(), this);
     }
 
     @Override
