@@ -29,6 +29,7 @@ public class Utils {
 
     public static void checkWinner() {
         int i = 0;
+        if (Game.aliveTeams == null) return;
         for (Team t : Game.aliveTeams) {
             for (Player p : t.members) {
                 t.alive = false;

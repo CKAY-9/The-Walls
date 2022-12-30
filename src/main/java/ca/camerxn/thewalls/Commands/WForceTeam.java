@@ -99,10 +99,7 @@ public class WForceTeam implements CommandExecutor {
                 target.setPlayerListName(Utils.formatText(finalTeam.teamColor + "[" + finalTeam.teamName + "] " + target.getName()));
                 target.getInventory().clear();
                 target.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, Config.data.getInt("players.spawn.steakAmount")));
-                if (!Utils.isAlive(target)) {
-                    target.spigot().respawn();
-                    target.setGameMode(GameMode.SURVIVAL);
-                }
+                target.setGameMode(GameMode.SURVIVAL);
             }
         } catch (Exception e) {
             sender.sendMessage(Utils.formatText("&cArguments provided aren't valid!"));
