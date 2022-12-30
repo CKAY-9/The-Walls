@@ -37,7 +37,6 @@ public class Utils {
                     break;
                 }
             }
-            Utils.getPlugin().getLogger().info(t.alive + " / " + t.teamName);
             if (!t.alive) {
                 Bukkit.broadcastMessage(Utils.formatText(t.teamColor + t.teamName + "&c team has been eliminated from The Walls!"));
                 Game.aliveTeams.remove(i);
