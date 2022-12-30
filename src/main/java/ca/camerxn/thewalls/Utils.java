@@ -45,9 +45,13 @@ public class Utils {
             i++;
         }
 
-        if (Game.aliveTeams.size() <= 1) {
+        if (Game.aliveTeams.size() == 1) {
             Team winningTeam = Game.aliveTeams.get(0);
             Bukkit.broadcastMessage(Utils.formatText(winningTeam.teamColor + winningTeam.teamName + "&2 has won The Walls!"));
+            Game.end();
+        }
+        if (Game.aliveTeams.size() == 0) {
+            Bukkit.broadcastMessage(Utils.formatText("&6&lThe Walls has resulted in a tie!"));
             Game.end();
         }
     }
