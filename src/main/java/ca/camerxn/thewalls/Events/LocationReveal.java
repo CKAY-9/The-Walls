@@ -25,7 +25,7 @@ public class LocationReveal extends Event {
             if (t.members.size() == 0) continue;
             int r = new Random().nextInt(t.members.size());
             Player p = t.members.get(r);
-            while (!Utils.isAlive(p)) {
+            while (!Utils.isAlive(p) && t.members.size() >= 2) {
                 r = new Random().nextInt(t.members.size());
                 p = t.members.get(r);
             }
