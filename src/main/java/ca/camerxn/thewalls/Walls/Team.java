@@ -13,7 +13,7 @@ public class Team {
     public int team; // 0 = red, 1 = blue, 2 = yellow, 3 = green
     public String teamName = "TBD";
     public String teamColor = "&f";
-    public Location teamSpawn;
+    public Location teamSpawn = new Location(World.world, 0, 0, 0);
     public boolean alive = false;
 
     public Team(int _team, boolean overrideAlive) {
@@ -52,6 +52,7 @@ public class Team {
                 teamSpawn = new Location(World.world, x3, y3, z3);
                 break;
         }
+
         Game.teams.add(this);
         if (!overrideAlive) {
             alive = true;
@@ -71,7 +72,7 @@ public class Team {
             ply.setPlayerListName(Utils.formatText(teamColor + "[" + teamName + "] " + ply.getName()));
             ply.setGameMode(GameMode.SURVIVAL);
             ply.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, Config.data.getInt("players.spawn.steakAmount")));
-            ply.teleport(teamSpawn);
+            ply.teleport(teamSpawn.add(0, 2, 0));
         }
     }
 

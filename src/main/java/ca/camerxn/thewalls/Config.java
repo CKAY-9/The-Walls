@@ -52,6 +52,7 @@ public class Config {
                 data.set("teams.two.color", "&e");
                 data.set("teams.three.name", "Green");
                 data.set("teams.three.color", "&2");
+                data.set("teams.allowTie", false);
                 // world
                 data.set("world.borderShrinkPercentageOfSize", 0.2);
                 data.set("world.saving", true);
