@@ -30,7 +30,7 @@ public class Utils {
     }
 
     public static void checkWinner() {
-        ArrayList<Team> teamsToRemove = new ArrayList<>();
+        int i = 0;
         for (Team t : Game.aliveTeams) {
             for (Player p : t.members) {
                 t.alive = false;
@@ -41,11 +41,9 @@ public class Utils {
             }
             if (!t.alive) {
                 Bukkit.broadcastMessage(Utils.formatText(t.teamColor + t.teamName + "&c team has been eliminated from The Walls!"));
-                teamsToRemove.add(t);
+                Game.aliveTeams.remove(i);
             }
-        }
-        for (Team t : teamsToRemove) {
-            Game.aliveTeams.remove(t);
+            i++;
         }
         if (Config.data.getBoolean("teams.allowTie")) {
             if (Game.aliveTeams.size() == 0) {
