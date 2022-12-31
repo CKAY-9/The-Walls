@@ -9,6 +9,8 @@ import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
+
 public class Utils {
 
     public static String formatText(String s) {
@@ -28,8 +30,7 @@ public class Utils {
     }
 
     public static void checkWinner() {
-        int i = 0;
-        if (Game.aliveTeams == null) return;
+        ArrayList<Team> teamsToRemove = new ArrayList<>();
         for (Team t : Game.aliveTeams) {
             for (Player p : t.members) {
                 t.alive = false;
@@ -40,11 +41,12 @@ public class Utils {
             }
             if (!t.alive) {
                 Bukkit.broadcastMessage(Utils.formatText(t.teamColor + t.teamName + "&c team has been eliminated from The Walls!"));
-                Game.aliveTeams.remove(i);
+                teamsToRemove.add(t);
             }
-            i++;
         }
-
+        for (Team t : teamsToRemove) {
+            Game.aliveTeams.remove(t);
+        }
         if (Game.aliveTeams.size() == 1) {
             Team winningTeam = Game.aliveTeams.get(0);
             Bukkit.broadcastMessage(Utils.formatText(winningTeam.teamColor + winningTeam.teamName + "&2 has won The Walls!"));
