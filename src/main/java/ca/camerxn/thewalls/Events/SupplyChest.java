@@ -25,8 +25,12 @@ public class SupplyChest extends Event{
     };
     ItemStack[] griefChest = new ItemStack[]{
             new ItemStack(Material.TNT, 32),
-            new ItemStack(Material.FLINT_AND_STEEL, 2),
-            new ItemStack(Material.LAVA_BUCKET, 4)
+            new ItemStack(Material.FLINT_AND_STEEL, 1),
+            new ItemStack(Material.FLINT_AND_STEEL, 1),
+            new ItemStack(Material.LAVA_BUCKET, 1),
+            new ItemStack(Material.LAVA_BUCKET, 1),
+            new ItemStack(Material.LAVA_BUCKET, 1),
+            new ItemStack(Material.LAVA_BUCKET, 1)
     };
     ItemStack[] blocksChest = new ItemStack[]{
             new ItemStack(Material.OAK_LOG, 64),

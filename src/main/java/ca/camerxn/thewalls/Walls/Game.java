@@ -87,6 +87,8 @@ public class Game {
             new FreeFood("Free Food / Chicken Explosion");
         if (Config.data.getBoolean("events.reveal.enabled"))
             new LocationReveal("Location Reveal");
+        if (Config.data.getBoolean("events.sinkHole.enabled"))
+            new SinkHole("Sink Hole");
 
         started = true;
         time = 0;
@@ -217,7 +219,9 @@ public class Game {
             }
             borderCloseTimer--;
         }
-        Utils.checkWinner();
+        if (Config.data.getBoolean("teams.checkWinEverySecond")) {
+            Utils.checkWinner();
+        }
     }
 
 }
