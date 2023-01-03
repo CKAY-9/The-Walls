@@ -14,12 +14,22 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 
+class TempBlock {
+    Location blockLoc;
+    Material blockType;
+
+    public TempBlock(Location loc, Material mat) {
+        this.blockLoc = loc;
+        this.blockType = mat;
+    }
+}
+
 class SinkHoleHandler {
     Player p;
     private int timer = Config.data.getInt("events.sinkHole.seconds");
     private int taskID = 0;
     private boolean sunk = false;
-    private final ArrayList<Material> blocks = new ArrayList<>();
+    private final ArrayList<TempBlock> blocks = new ArrayList<>();
 
     public SinkHoleHandler(Player p) {
         this.p = p;
@@ -45,7 +55,8 @@ class SinkHoleHandler {
                     for (int z = -size; z < (size + 1); z++) {
                         for (int y = -64; y < 325; y++) {
                             if (World.world.getBlockAt(playerLoc.getBlockX() + x, y, playerLoc.getBlockZ() + z).getType() == Material.AIR) continue;
-                            blocks.add(i, World.world.getBlockAt(playerLoc.getBlockX() + x, y, playerLoc.getBlockZ() + z).getType());
+                            Block temp = World.world.getBlockAt(playerLoc.getBlockX() + x, y, playerLoc.getBlockZ() + z);
+                            blocks.add(i, new TempBlock(temp.getLocation(), temp.getType()));
                             World.world.getBlockAt(playerLoc.getBlockX() + x, y, playerLoc.getBlockZ() + z).setType(Material.AIR);
                             i++;
                         }
@@ -55,15 +66,10 @@ class SinkHoleHandler {
             }
 
             if (timer <= -Config.data.getInt("events.sinkHole.timeUntilReset") && sunk && blocks.size() >= 1) {
-                int i = 0;
-                for (int x = -size; x < (size + 1); x++) {
-                    for (int z = -size; z < (size + 1); z++) {
-                        for (int y = -64; y < 325; y++) {
-                            World.world.getBlockAt(playerLoc.getBlockX() + x, y, playerLoc.getBlockZ() + z).setType(blocks.get(i));
-                            i++;
-                        }
-                    }
+                for (TempBlock temp : blocks) {
+                    World.world.getBlockAt(temp.blockLoc).setType(temp.blockType);
                 }
+
                 Bukkit.getScheduler().cancelTask(taskID);
             }
 
