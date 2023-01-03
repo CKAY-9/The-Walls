@@ -44,6 +44,7 @@ class SinkHoleHandler {
                 for (int x = -size; x < (size + 1); x++) {
                     for (int z = -size; z < (size + 1); z++) {
                         for (int y = -64; y < 325; y++) {
+                            if (World.world.getBlockAt(playerLoc.getBlockX() + x, y, playerLoc.getBlockZ() + z).getType() == Material.AIR) continue;
                             blocks.add(i, World.world.getBlockAt(playerLoc.getBlockX() + x, y, playerLoc.getBlockZ() + z).getType());
                             World.world.getBlockAt(playerLoc.getBlockX() + x, y, playerLoc.getBlockZ() + z).setType(Material.AIR);
                             i++;
