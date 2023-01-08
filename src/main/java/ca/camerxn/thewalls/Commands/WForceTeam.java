@@ -35,7 +35,11 @@ public class WForceTeam implements CommandExecutor {
                 sender.sendMessage(Utils.formatText("&cCouldn't find player with the name of " + args[0] + "!"));
                 return false;
             }
-            String newTeam = args[1].toLowerCase();
+            StringBuilder newTeamBuilder = new StringBuilder();
+            for (int i = 1; i < args.length; i++) {
+                newTeamBuilder.append(args[i]);
+            }
+            String newTeam = newTeamBuilder.toString();
             boolean flag = false;
 
             for (int i = 0; i < Game.teams.size(); i++) {

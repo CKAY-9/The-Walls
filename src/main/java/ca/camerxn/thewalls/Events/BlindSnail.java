@@ -18,11 +18,13 @@ public class BlindSnail extends Event {
     @Override
     public void run() {
         for (Player p : Bukkit.getOnlinePlayers()) {
-            if (!Utils.isAlive(p)) continue;
             p.sendMessage(Utils.formatText("&5You have been turned into a &c&lBLIND SNAIL&r&5."));
+            p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_LAND, 255, 1);
+
+            if (!Utils.isAlive(p)) continue;
+
             p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Config.data.getInt("events.blindSnail.seconds") * 20, Config.data.getInt("events.blindSnail.blindStrength"), true));
             p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Config.data.getInt("events.blindSnail.seconds") * 20, Config.data.getInt("events.blindSnail.slowStrength"), true));
-            p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_LAND, 255, 1);
         }
     }
 }

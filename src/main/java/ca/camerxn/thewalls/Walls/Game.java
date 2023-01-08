@@ -5,12 +5,14 @@ import ca.camerxn.thewalls.Events.*;
 import ca.camerxn.thewalls.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 public class Game {
@@ -33,19 +35,34 @@ public class Game {
 
     private static int time = 0;
 
-    public static void start(Player starter) {
+    public static void start(@Nullable Player starter) {
+
         if (Bukkit.getOnlinePlayers().size() == 0) {
-            starter.sendMessage(Utils.formatText("&cThere are no online players!"));
+            if (starter != null) {
+                starter.sendMessage(Utils.formatText("&cThere are no online players!"));
+            }
             return;
         }
 
-        World.world = starter.getWorld();
-        World.world.getWorldBorder().setCenter(starter.getLocation());
+        if (starter == null) {
+            World.world = Bukkit.getWorld(Objects.requireNonNull(Config.data.getString("theWalls.autoExecute.worldName")));
+            assert World.world != null;
+            Location loc = new Location(World.world, Config.data.getDouble("theWalls.autoExecute.center.x"), 0, Config.data.getDouble("theWalls.autoExecute.center.z"));
+            World.world.getWorldBorder().setCenter(loc.getX(), loc.getZ());
+            World.positionOne[0] = loc.getBlockX() + size;
+            World.positionOne[1] = loc.getBlockZ() + size;
+            World.positionTwo[0] = loc.getBlockX() - size;
+            World.positionTwo[1] = loc.getBlockZ() - size;
+        } else {
+            World.world = starter.getWorld();
+            World.world.getWorldBorder().setCenter(starter.getLocation());
+            World.positionOne[0] = starter.getLocation().getBlockX() + size;
+            World.positionOne[1] = starter.getLocation().getBlockZ() + size;
+            World.positionTwo[0] = starter.getLocation().getBlockX() - size;
+            World.positionTwo[1] = starter.getLocation().getBlockZ() - size;
+        }
+
         World.world.getWorldBorder().setSize((size * 2) - 2);
-        World.positionOne[0] = starter.getLocation().getBlockX() + size;
-        World.positionOne[1] = starter.getLocation().getBlockZ() + size;
-        World.positionTwo[0] = starter.getLocation().getBlockX() - size;
-        World.positionTwo[1] = starter.getLocation().getBlockZ() - size;
         World.world.setTime(1000);
 
         World.save();
@@ -89,6 +106,9 @@ public class Game {
             new LocationReveal("Location Reveal");
         if (Config.data.getBoolean("events.sinkHole.enabled"))
             new SinkHole("Sink Hole");
+        if (Config.data.getBoolean("events.hailStorm.enabled")) {
+            new HailStorm("Hail of Arrows");
+        }
 
         started = true;
         time = 0;
@@ -190,28 +210,52 @@ public class Game {
             for (Team t : Game.teams) {
                 Score teamName;
                 if (t.alive) {
-                    teamName = obj.getScore(Utils.formatText(t.teamColor + "&l" + t.teamName + "&r - &2ALIVE"));
+                    if (Config.data.getBoolean("theWalls.legacyHud")) {
+                        teamName = obj.getScore(Utils.formatText(t.teamColor + "&l" + t.teamName + "&r - &2ALIVE"));
+                    } else {
+                        teamName = obj.getScore(Utils.formatText(t.teamColor + "&l" + t.teamName + "&r" + t.teamColor + " - " + t.getAliveMembers() + " Alive"));
+                    }
                 } else {
                     teamName = obj.getScore(Utils.formatText(t.teamColor + "&l" + t.teamName + "&r - &cDEAD"));
                 }
                 teamName.setScore(currScore);
                 currScore--;
-                // Loop through team members
-                for (Player member : t.members) {
-                    if (member == null) continue;
-                    Score tMember;
-                    if (Utils.isAlive(member)) {
-                        tMember = obj.getScore(Utils.formatText(t.teamColor + " - " + member.getName() + "&r - &2ALIVE"));
-                    } else {
-                        tMember = obj.getScore(Utils.formatText(t.teamColor + " - " + member.getName() + "&r - &cDEAD"));
+                if (Config.data.getBoolean("theWalls.legacyHud")) {
+                    // Loop through team members
+                    for (Player member : t.members) {
+                        if (member == null) continue;
+                        Score tMember;
+                        if (Utils.isAlive(member)) {
+                            tMember = obj.getScore(Utils.formatText(t.teamColor + " - " + member.getName() + "&r - &2ALIVE"));
+                        } else {
+                            tMember = obj.getScore(Utils.formatText(t.teamColor + " - " + member.getName() + "&r - &cDEAD"));
+                        }
+                        tMember.setScore(currScore);
+                        currScore--;
                     }
-                    tMember.setScore(currScore);
-                    currScore--;
+                }
+            }
+
+            if (Utils.isAlive(p)) {
+                Team tempTeam = Team.getPlayerTeam(p);
+                if (tempTeam != null) {
+                    p.addScoreboardTag(Utils.formatText(tempTeam.teamColor + "&l[" + tempTeam.teamName + "]"));
+                }
+            } else {
+                if ((Config.data.getBoolean("theWalls.respawnDuringPrepTime") && !wallsFallen) || (Config.data.getBoolean("theWalls.respawnDuringInitialFighting") && !borderClosing)) {
+                    Team tempTeam = Team.getPlayerTeam(p);
+                    if (tempTeam != null) {
+                        tempTeam.readyPlayer(p);
+                    } else {
+                        aliveTeams.get(0).members.add(p);
+                        aliveTeams.get(0).readyPlayer(p);
+                    }
                 }
             }
 
             p.setScoreboard(board);
         }
+
         time++;
         if (wallsFallen) {
             if (Events.events.size() >= 1) {

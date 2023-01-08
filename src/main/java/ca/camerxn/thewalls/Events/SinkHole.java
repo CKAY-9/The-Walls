@@ -33,12 +33,12 @@ class SinkHoleHandler {
 
     public SinkHoleHandler(Player p) {
         this.p = p;
-        p.sendMessage(Utils.formatText("&0&lSink Hole&r&c opening in " + timer + "s!"));
-        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, 255, 1);
 
-        ArmorStand stand = (ArmorStand) World.world.spawnEntity(p.getLocation().subtract(0, 1, 0), EntityType.ARMOR_STAND);
+        ArmorStand stand = (ArmorStand) World.world.spawnEntity(p.getLocation().subtract(0, 2, 0), EntityType.ARMOR_STAND);
         stand.setVisible(false);
         stand.setGravity(false);
+        stand.setSmall(true);
+        stand.setHealth(1);
 
         int size = Config.data.getInt("events.sinkHole.size");
         Location playerLoc = p.getLocation();
@@ -87,6 +87,8 @@ public class SinkHole extends Event {
     @Override
     public void run() {
         for (Player p : Bukkit.getOnlinePlayers()) {
+            p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, 255, 1);
+            p.sendMessage(Utils.formatText("&0&lSink Hole&r&c opening in " + Config.data.getInt("events.sinkHole.seconds") + "s!"));
             if (!Utils.isAlive(p)) continue;
             new SinkHoleHandler(p);
         }

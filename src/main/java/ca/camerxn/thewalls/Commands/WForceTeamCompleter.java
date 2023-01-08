@@ -16,11 +16,18 @@ public class WForceTeamCompleter implements TabCompleter {
             return Collections.emptyList();
         }
         if (args.length == 2) {
+            String teamOne = Config.data.getString("teams.zero.name");
+            String teamTwo = Config.data.getString("teams.one.name");
+            String teamThree = Config.data.getString("teams.two.name");
+            String teamFour = Config.data.getString("teams.three.name");
+
+            if (teamOne == null || teamTwo == null || teamThree == null || teamFour == null) return Collections.emptyList();
+
             ArrayList<String> teams = new ArrayList<>();
-            teams.add(Config.data.getString("teams.zero.name"));
-            teams.add(Config.data.getString("teams.one.name"));
-            teams.add(Config.data.getString("teams.two.name"));
-            teams.add(Config.data.getString("teams.three.name"));
+            teams.add(teamOne);
+            teams.add(teamTwo);
+            teams.add(teamThree);
+            teams.add(teamFour);
             return teams;
         }
 

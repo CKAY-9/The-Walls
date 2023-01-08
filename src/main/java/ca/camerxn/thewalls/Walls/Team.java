@@ -6,6 +6,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class Team {
@@ -60,19 +61,36 @@ public class Team {
         }
     }
 
+    public int getAliveMembers() {
+        int count = 0;
+        for (Player ply : members) {
+            if (Utils.isAlive(ply)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public void readyPlayer(Player ply) {
+        ply.setHealth(20);
+        ply.setSaturation(20);
+        ply.getInventory().clear();
+        ply.sendTitle(Utils.formatText("&6&lThe Walls"), Utils.formatText("&cLast Team Standing Wins!"), 10, 80, 20);
+        ply.playSound(ply.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 255, 1);
+        ply.setStatistic(Statistic.DEATHS, 0);
+        ply.setDisplayName(Utils.formatText(teamColor + "[" + teamName + "] " + ply.getName()));
+        ply.setPlayerListName(Utils.formatText(teamColor + "[" + teamName + "] " + ply.getName()));
+        ply.setGameMode(GameMode.SURVIVAL);
+        ply.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, Config.data.getInt("players.spawn.steakAmount")));
+
+        // Calc teamspawn in case of change
+        teamSpawn.setY(World.world.getHighestBlockYAt(teamSpawn.getBlockX(), teamSpawn.getBlockZ()));
+        ply.teleport(teamSpawn.add(0, 2, 0));
+    }
+
     public void readyPlayers() {
         for (Player ply : members) {
-            ply.setHealth(20);
-            ply.setSaturation(20);
-            ply.getInventory().clear();
-            ply.sendTitle(Utils.formatText("&6&lThe Walls"), Utils.formatText("&cLast Team Standing Wins!"), 10, 80, 20);
-            ply.playSound(ply.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 255, 1);
-            ply.setStatistic(Statistic.DEATHS, 0);
-            ply.setDisplayName(Utils.formatText(teamColor + "[" + teamName + "] " + ply.getName()));
-            ply.setPlayerListName(Utils.formatText(teamColor + "[" + teamName + "] " + ply.getName()));
-            ply.setGameMode(GameMode.SURVIVAL);
-            ply.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, Config.data.getInt("players.spawn.steakAmount")));
-            ply.teleport(teamSpawn.add(0, 2, 0));
+            readyPlayer(ply);
         }
     }
 

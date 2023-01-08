@@ -44,6 +44,9 @@ public class FreeFood extends Event {
     @Override
     public void run() {
         for (Player p : Bukkit.getOnlinePlayers()) {
+            p.sendMessage(Utils.formatText("&2&lThe Gregs&r&2 are here to give you free food!"));
+            p.playSound(p.getLocation(), Sound.ENTITY_CHICKEN_AMBIENT, 255, 1);
+
             if (!Utils.isAlive(p)) continue;
 
             p.getInventory().addItem(p.getInventory().getItemInOffHand());
@@ -53,8 +56,6 @@ public class FreeFood extends Event {
                 Chicken chicken = (Chicken) World.world.spawnEntity(p.getLocation(), EntityType.CHICKEN);
                 new HandleChickens(chicken, p);
             }
-            p.sendMessage(Utils.formatText("&2&lThe Gregs&r&2 are here to give you free food!"));
-            p.playSound(p.getLocation(), Sound.ENTITY_CHICKEN_AMBIENT, 255, 1);
         }
     }
 }

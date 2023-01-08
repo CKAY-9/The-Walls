@@ -30,6 +30,9 @@ public class Config {
                 data.set("events.gregs.speed", 3);
                 data.set("events.gregs.amount", 5);
             }
+            if (!data.isSet("events.gregs.fireExplosion")) {
+                data.set("events.gregs.fireExplosion", true);
+            }
             if (!data.isSet("events.reveal.enabled")) {
                 data.set("events.reveal.enabled", true);
                 data.set("events.reveal.displayCords", true);
@@ -40,6 +43,13 @@ public class Config {
                 data.set("events.blindSnail.seconds", 5);
                 data.set("events.blindSnail.blindStrength", 10);
                 data.set("events.blindSnail.slowStrength", 3);
+            }
+            if (!data.isSet("events.hailStorm.enabled")) {
+                data.set("events.hailStorm.enabled", true);
+                data.set("events.hailStorm.delay", 5);
+                data.set("events.hailStorm.height", 5);
+                data.set("events.hailStorm.volleySize", 3);
+                data.set("events.hailStorm.arrowDamage", 4);
             }
             if (!data.isSet("events.tnt.enabled")) {
                 data.set("events.tnt.enabled", true);
@@ -91,6 +101,25 @@ public class Config {
             }
             if (!data.isSet("world.saving")) {
                 data.set("world.saving", true);
+            }
+            if (!data.isSet("theWalls.legacyHud")) {
+                data.set("theWalls.legacyHud", false);
+            }
+            if (!data.isSet("theWalls.respawnDuringPrepTime")) {
+                data.set("theWalls.respawnDuringPrepTime", false);
+            }
+            if (!data.isSet("theWalls.respawnDuringInitialFighting")) {
+                data.set("theWalls.respawnDuringInitialFighting", false);
+            }
+            if (!data.isSet("theWalls.autoExecute.center")) {
+                data.set("theWalls.autoExecute.center.x", 0);
+                data.set("theWalls.autoExecute.center.z", 0);
+                data.set("theWalls.autoExecute.size", 100);
+                data.set("theWalls.autoExecute.eventCooldown", 60);
+                data.set("theWalls.autoExecute.prepTime", 600);
+                data.set("theWalls.autoExecute.timeUntilBorderClose", 600);
+                data.set("theWalls.autoExecute.speedOfBorderClose", 180);
+                data.set("theWalls.autoExecute.worldName", "world");
             }
             data.save(dataFile);
         } catch (IOException ex) {

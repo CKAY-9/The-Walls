@@ -29,7 +29,7 @@ public class EntityDeath implements Listener {
                     e.getEntity().getKiller().getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE, 2));
                     e.getEntity().getKiller().sendMessage(Utils.formatText("&2Greg has spared you and has given you some &e&lGolden Apples!"));
                 } else {
-                    World.world.createExplosion(e.getEntity().getLocation(), Config.data.getInt("events.gregs.power"), true);
+                    World.world.createExplosion(e.getEntity().getLocation(), Config.data.getInt("events.gregs.power"), Config.data.getBoolean("events.gregs.fireExplosion"));
                 }
             }
         }
