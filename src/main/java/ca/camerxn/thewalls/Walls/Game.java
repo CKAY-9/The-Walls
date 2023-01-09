@@ -220,10 +220,11 @@ public class Game {
                 }
                 teamName.setScore(currScore);
                 currScore--;
-                if (Config.data.getBoolean("theWalls.legacyHud")) {
                     // Loop through team members
-                    for (Player member : t.members) {
-                        if (member == null) continue;
+                for (Player member : t.members) {
+                    if (member == null) continue;
+
+                    if (Config.data.getBoolean("theWalls.legacyHud")) {
                         Score tMember;
                         if (Utils.isAlive(member)) {
                             tMember = obj.getScore(Utils.formatText(t.teamColor + " - " + member.getName() + "&r - &2ALIVE"));
@@ -236,14 +237,9 @@ public class Game {
                 }
             }
 
-            if (Utils.isAlive(p)) {
+            if (!Utils.isAlive(p)) {
                 Team tempTeam = Team.getPlayerTeam(p);
-                if (tempTeam != null) {
-                    p.addScoreboardTag(Utils.formatText(tempTeam.teamColor + "&l[" + tempTeam.teamName + "]"));
-                }
-            } else {
                 if ((Config.data.getBoolean("theWalls.respawnDuringPrepTime") && !wallsFallen) || (Config.data.getBoolean("theWalls.respawnDuringInitialFighting") && !borderClosing)) {
-                    Team tempTeam = Team.getPlayerTeam(p);
                     if (tempTeam != null) {
                         tempTeam.readyPlayer(p);
                     } else {

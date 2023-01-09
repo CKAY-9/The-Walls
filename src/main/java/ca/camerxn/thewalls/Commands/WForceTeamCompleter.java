@@ -15,7 +15,7 @@ public class WForceTeamCompleter implements TabCompleter {
         if (!sender.isOp()) {
             return Collections.emptyList();
         }
-        if (args.length == 2) {
+        if (args.length == 2 && args[1].length() >= 1) {
             String teamOne = Config.data.getString("teams.zero.name");
             String teamTwo = Config.data.getString("teams.one.name");
             String teamThree = Config.data.getString("teams.two.name");
@@ -24,10 +24,22 @@ public class WForceTeamCompleter implements TabCompleter {
             if (teamOne == null || teamTwo == null || teamThree == null || teamFour == null) return Collections.emptyList();
 
             ArrayList<String> teams = new ArrayList<>();
-            teams.add(teamOne);
-            teams.add(teamTwo);
-            teams.add(teamThree);
-            teams.add(teamFour);
+            if (teamOne.toLowerCase().contains(args[1].toLowerCase()))
+                teams.add(teamOne);
+            if (teamTwo.toLowerCase().contains(args[1].toLowerCase()))
+                teams.add(teamTwo);
+            if (teamThree.toLowerCase().contains(args[1].toLowerCase()))
+                teams.add(teamThree);
+            if (teamFour.toLowerCase().contains(args[1].toLowerCase()))
+                teams.add(teamFour);
+            return teams;
+        }
+        if (args.length == 2) {
+            ArrayList<String> teams = new ArrayList<>();
+            teams.add(Config.data.getString("teams.zero.name"));
+            teams.add(Config.data.getString("teams.one.name"));
+            teams.add(Config.data.getString("teams.two.name"));
+            teams.add(Config.data.getString("teams.three.name"));
             return teams;
         }
 
