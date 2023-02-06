@@ -1,6 +1,6 @@
 # Features
 
-- Many Events
+- A lot of Events
 - Saving of orginal world data/blocks
 - Ability to force/respawn players onto certain teams
 - Many more!
