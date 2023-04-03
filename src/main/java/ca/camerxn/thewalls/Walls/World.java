@@ -4,6 +4,8 @@ import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -54,6 +56,13 @@ public class World {
         world.getWorldBorder().setCenter(0, 0);
         world.getWorldBorder().setSize(29999980);
         world.getWorldBorder().setDamageAmount(0);
+        
+        // Clear items from the ground
+        for (Entity ent : world.getEntities()) {
+            if (ent.getType() == EntityType.DROPPED_ITEM) {
+                ent.remove();
+            }
+        }
 
         if (!Config.data.getBoolean("world.saving")) return;
 
@@ -87,6 +96,11 @@ public class World {
 
     // Save and spawn (bedrock) blocks for the actual walls
     public static void wallBlocks() {
+        for (Entity ent : world.getEntities()) {
+            if (ent.getType() == EntityType.DROPPED_ITEM) {
+                ent.remove();
+            }
+        }
         Utils.getPlugin().getLogger().info("Saving original wall blocks...");
 
         for (Player p : Bukkit.getOnlinePlayers()) {

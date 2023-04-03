@@ -2,6 +2,8 @@ package ca.camerxn.thewalls;
 
 import ca.camerxn.thewalls.Commands.*;
 import ca.camerxn.thewalls.Listeners.*;
+import ca.camerxn.thewalls.Walls.Game;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TheWalls extends JavaPlugin {
@@ -30,6 +32,8 @@ public final class TheWalls extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        if (Game.started) {
+            Game.end(true, null);
+        }
     }
 }

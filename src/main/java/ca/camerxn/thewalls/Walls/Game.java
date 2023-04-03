@@ -67,9 +67,6 @@ public class Game {
         World.world.getWorldBorder().setSize((size * 2) - 2);
         World.world.setTime(1000);
 
-        World.save();
-        World.wallBlocks();
-
         // Handle teams
         if (Bukkit.getOnlinePlayers().size() >= 1) {
             new Team(0, false);
@@ -87,11 +84,17 @@ public class Game {
         int i = 0;
         for (Player p : Bukkit.getOnlinePlayers()) {
             teams.get(i % 4).members.add(p);
+            teams.get(i % 4).readyPlayer(p);
             i++;
         }
-        for (Team team : aliveTeams) {
-            team.readyPlayers();
-        }
+
+        Bukkit.getScheduler().runTask(Utils.getPlugin(), new Runnable() {
+            @Override
+            public void run() {
+                World.save();
+                World.wallBlocks();
+            }
+        });
 
         // Register events
         if (Config.data.getBoolean("events.tnt.enabled"))
@@ -126,10 +129,16 @@ public class Game {
 
     // End the game and clean up anything related to it
     public static void end(boolean forced, @Nullable Team winningTeam) {
-        World.reset();
         borderClosing = false;
         wallsFallen = false;
+
         Bukkit.getScheduler().cancelTask(gameLoopID);
+        if (Utils.getPlugin().isEnabled()) {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Utils.getPlugin(), World::reset, 20*7);
+        } else {
+            World.reset();
+        }
+
         if (!forced) {
             for (Team t : Game.teams) {
                 for (Player p : t.members) {
@@ -156,6 +165,7 @@ public class Game {
             p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
             p.sendMessage(Utils.formatText("&aThe Walls has ended!"));
             p.setDisplayName(p.getName());
+            p.getInventory().clear();
             p.setPlayerListName(p.getName());
             p.setGameMode(GameMode.SURVIVAL);
         }

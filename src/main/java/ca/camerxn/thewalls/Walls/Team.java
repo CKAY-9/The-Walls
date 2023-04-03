@@ -73,23 +73,32 @@ public class Team {
     public void readyPlayer(Player ply) {
         ply.setHealth(20);
         ply.setSaturation(20);
+
+        // Handle inventory
         ply.getInventory().clear();
+        ply.getInventory().remove(ply.getItemOnCursor());
+        ply.getInventory().remove(ply.getItemInUse());
+        ply.setItemOnCursor(null);
+        ply.updateInventory();
+
+        // Noti
         ply.sendTitle(Utils.formatText("&6&lThe Walls"), Utils.formatText("&cLast Team Standing Wins!"), 10, 80, 20);
         ply.playSound(ply.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 255, 1);
-        ply.setStatistic(Statistic.DEATHS, 0);
+
+        // Game Stuff
         ply.setDisplayName(Utils.formatText(teamColor + "[" + teamName + "] " + ply.getName()));
         ply.setPlayerListName(Utils.formatText(teamColor + "[" + teamName + "] " + ply.getName()));
         ply.setGameMode(GameMode.SURVIVAL);
+        ply.setStatistic(Statistic.DEATHS, 0);
         ply.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, Config.data.getInt("players.spawn.steakAmount")));
 
         // Calc teamspawn in case of change
         teamSpawn.setY(World.world.getHighestBlockYAt(teamSpawn.getBlockX(), teamSpawn.getBlockZ()));
         ply.teleport(teamSpawn.add(0, 2, 0));
-    }
-
-    public void readyPlayers() {
-        for (Player ply : members) {
-            readyPlayer(ply);
+        for (int x = -1; x < 2; x++) {
+            for (int z = -1; z < 2; z++) {
+                World.world.getBlockAt(teamSpawn.getBlockX() + x, teamSpawn.getBlockY() - 1, teamSpawn.getBlockZ() + z).setType(Material.BEDROCK);
+            }
         }
     }
 
