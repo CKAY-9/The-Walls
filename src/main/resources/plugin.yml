@@ -11,3 +11,5 @@ commands:
     description: End the ongoing game of The Walls
   wforceteam:
     description: Switch/Respawn a player to a team
+  wleaderboard:
+    description: Get the top 5 best players

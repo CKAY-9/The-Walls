@@ -7,8 +7,6 @@ import ca.camerxn.thewalls.Walls.World;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Sound;
-import org.bukkit.Statistic;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -4,7 +4,6 @@ import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.Utils;
 import ca.camerxn.thewalls.Walls.Game;
 import ca.camerxn.thewalls.Walls.Team;
-import ca.camerxn.thewalls.Walls.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;

@@ -2,11 +2,12 @@ package ca.camerxn.thewalls;
 
 import ca.camerxn.thewalls.Walls.Game;
 import ca.camerxn.thewalls.Walls.Team;
+
+import java.util.ArrayList;
+
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-
-import java.util.ArrayList;
 
 public class Utils {
 
@@ -28,6 +29,7 @@ public class Utils {
 
     public static void checkWinner() {
         int i = 0;
+        ArrayList<Integer> teamsToRemove = new ArrayList<>();
         for (Team t : Game.aliveTeams) {
             for (Player p : t.members) {
                 t.alive = false;
@@ -41,17 +43,21 @@ public class Utils {
                     p.playSound(p.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_IMPACT, 255, 1);
                 }
                 Bukkit.broadcastMessage(Utils.formatText(t.teamColor + t.teamName + "&c team has been eliminated from The Walls!"));
-                Game.aliveTeams.remove(i);
+                teamsToRemove.add(i);
             }
             i++;
         }
-        if (Config.data.getBoolean("teams.allowTie")) {
+        for (int j = 0; j < teamsToRemove.size(); j++) {
+            Utils.getPlugin().getLogger().info(Game.aliveTeams.get(j).teamName + " has been eliminated!");
+            Game.aliveTeams.remove(j);
+        }
+        if (Config.data.getBoolean("teams.allowTie") || Bukkit.getOnlinePlayers().size() <= 1) {
             if (Game.aliveTeams.size() == 0) {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     p.playSound(p.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME, 255, 1);
                 }
                 Bukkit.broadcastMessage(Utils.formatText("&6&lThe Walls has resulted in a tie!"));
-                Game.end();
+                Game.end(false, null);
             }
         }
         if (Game.aliveTeams.size() == 1) {
@@ -60,7 +66,7 @@ public class Utils {
                 p.playSound(p.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME, 255, 1);
             }
             Bukkit.broadcastMessage(Utils.formatText(winningTeam.teamColor + winningTeam.teamName + "&2 has won The Walls!"));
-            Game.end();
+            Game.end(false, null);
         }
 
     }

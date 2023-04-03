@@ -4,7 +4,6 @@ import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;

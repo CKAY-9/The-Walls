@@ -5,6 +5,8 @@
 *.ipr
 *.iws
 
+.vscode/
+
 # IntelliJ
 out/
 

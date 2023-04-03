@@ -18,7 +18,7 @@ public class WEnd implements CommandExecutor {
             return false;
         }
 
-        Game.end();
+        Game.end(true, null);
         return false;
     }
 }

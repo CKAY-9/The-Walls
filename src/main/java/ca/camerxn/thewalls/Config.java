@@ -1,6 +1,8 @@
 package ca.camerxn.thewalls;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +10,8 @@ import java.io.IOException;
 public class Config {
     public static File dataFile;
     public static YamlConfiguration data;
+    public static File leaderboardFile;
+    public static YamlConfiguration leaderboard;
 
     public static void initializeData() {
         try {
@@ -122,6 +126,37 @@ public class Config {
                 data.set("theWalls.autoExecute.worldName", "world");
             }
             data.save(dataFile);
+
+            leaderboardFile = new File(Utils.getPlugin().getDataFolder(), "leaderboard.yml");
+            if (!leaderboardFile.exists()) {
+                if (leaderboardFile.getParentFile().mkdirs()) {
+                    Utils.getPlugin().getLogger().info("Created data folder!");
+                }
+                if (leaderboardFile.createNewFile()) {
+                    Utils.getPlugin().getLogger().info("Created leadeboard file!");
+                }
+            }
+            leaderboard = YamlConfiguration.loadConfiguration(leaderboardFile);
+
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                createLeaderboardPlayer(p);
+            }
+        } catch (IOException ex) {
+            Utils.getPlugin().getLogger().warning(ex.toString());
+        }
+    }
+
+    public static void createLeaderboardPlayer(Player p) {
+        if (!Config.leaderboard.isSet(p.getPlayer().getUniqueId().toString() + ".wins")) {
+            Config.leaderboard.set(p.getPlayer().getUniqueId().toString() + ".wins", 0);
+        }
+        if (!Config.leaderboard.isSet(p.getPlayer().getUniqueId().toString() + ".losses")) {
+            Config.leaderboard.set(p.getPlayer().getUniqueId().toString() + ".losses", 0);
+        }
+        Config.leaderboard.set(p.getPlayer().getUniqueId().toString() + ".username", p.getPlayer().getName());
+
+        try {
+            Config.leaderboard.save(Config.leaderboardFile);
         } catch (IOException ex) {
             Utils.getPlugin().getLogger().warning(ex.toString());
         }

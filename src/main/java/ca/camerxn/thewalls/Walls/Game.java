@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
 import javax.annotation.Nullable;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
@@ -123,12 +125,34 @@ public class Game {
     }
 
     // End the game and clean up anything related to it
-    public static void end() {
+    public static void end(boolean forced, @Nullable Team winningTeam) {
         World.reset();
         borderClosing = false;
         wallsFallen = false;
         Bukkit.getScheduler().cancelTask(gameLoopID);
+        if (!forced) {
+            for (Team t : Game.teams) {
+                for (Player p : t.members) {
+                    if (t.alive) {
+                        int wins = Config.leaderboard.getInt(p.getUniqueId().toString() + ".wins") + 1;
+                        Config.leaderboard.set(p.getUniqueId().toString() + ".wins", wins);
+                    } else {
+                        int losses = Config.leaderboard.getInt(p.getUniqueId().toString() + ".losses") + 1;
+                        Config.leaderboard.set(p.getUniqueId().toString() + ".losses", losses);
+                    }
+                }
+            }
+
+            try {
+                Config.leaderboard.save(Config.leaderboardFile);
+            } catch (IOException ex) {
+                Utils.getPlugin().getLogger().warning(ex.toString());
+            }
+        }
         for (Player p : Bukkit.getOnlinePlayers()) {
+            if (!forced && winningTeam != null) {
+                p.sendTitle(Utils.formatText(winningTeam.teamColor + "&l" + winningTeam.teamName + " Team"), Utils.formatText(winningTeam.teamColor + "IS THE WINNER!"), 10, 80, 20);
+            }
             p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
             p.sendMessage(Utils.formatText("&aThe Walls has ended!"));
             p.setDisplayName(p.getName());
@@ -151,6 +175,7 @@ public class Game {
                 p.playSound(p.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LARGE_BLAST, 255, 1);
                 p.playSound(p.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_TWINKLE, 255, 1);
                 p.sendMessage(Utils.formatText("&aThe Walls have fallen!"));
+                p.sendTitle(Utils.formatText("&aThe Walls have fallen!"), "", 10, 80, 10);
             }
             wallsFallen = true;
         }

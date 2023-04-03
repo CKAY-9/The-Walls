@@ -17,6 +17,7 @@ public final class TheWalls extends JavaPlugin {
         this.getCommand("wend").setExecutor(new WEnd());
         this.getCommand("wforceteam").setExecutor(new WForceTeam());
         this.getCommand("wforceteam").setTabCompleter(new WForceTeamCompleter());
+        this.getCommand("wleaderboard").setExecutor(new WLeaderboard());
 
         // Register Listeners
         this.getServer().getPluginManager().registerEvents(new PlayerLeave(), this);
