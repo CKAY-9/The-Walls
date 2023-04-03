@@ -13,8 +13,6 @@
 # Known Issues
 
 - Not everything has been tested: there may be bugs
-- Going over ~125 blocks for the size will cause a lot of lag when starting the game
-- Sometimes the game may not end properly when a player dies (this should be fixed)
 
 # Developers
 
