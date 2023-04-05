@@ -3,12 +3,23 @@ package ca.camerxn.thewalls.Walls;
 import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+
+class SpawnProtectionBlock {
+    Location loc;
+    Material block;
+
+    public SpawnProtectionBlock(Location loc, Material mat) {
+        this.loc = loc;
+        this.block = mat;
+    }
+}
 
 public class World {
 
@@ -19,6 +30,7 @@ public class World {
 
     public static ArrayList<Material> originalBlocks = new ArrayList<>();
     public static ArrayList<Material> originalWallBlocks = new ArrayList<>();
+    public static ArrayList<SpawnProtectionBlock> spawnBlocks = new ArrayList<>();
 
     // This method does take a while if the map size if >50;
     public static void save() {
@@ -82,6 +94,11 @@ public class World {
             }
         }
 
+        for (SpawnProtectionBlock sBlock : spawnBlocks) {
+            World.world.getBlockAt(sBlock.loc).setType(sBlock.block);
+        }
+
+        spawnBlocks.clear();
         originalWallBlocks.clear();
         originalBlocks.clear();
 

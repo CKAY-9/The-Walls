@@ -97,6 +97,7 @@ public class Team {
         ply.teleport(teamSpawn.add(0, 2, 0));
         for (int x = -1; x < 2; x++) {
             for (int z = -1; z < 2; z++) {
+                World.spawnBlocks.add(new SpawnProtectionBlock(new Location(World.world, teamSpawn.getBlockX() + x, teamSpawn.getBlockY() - 1, teamSpawn.getBlockZ() + z), World.world.getBlockAt(teamSpawn.getBlockX() + x, teamSpawn.getBlockY() - 1, teamSpawn.getBlockZ() + z).getType()));
                 World.world.getBlockAt(teamSpawn.getBlockX() + x, teamSpawn.getBlockY() - 1, teamSpawn.getBlockZ() + z).setType(Material.BEDROCK);
             }
         }
