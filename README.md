@@ -10,6 +10,22 @@
 - Leaderboard for the best players
 - Extensive config options
 
+# Installation
+1. Have a spigot or paper MC server
+2. Download `TheWalls-1.2.1.jar` from below
+3. Drop the .jar into your `/plugins` folder
+4. Reload/Launch your server
+
+# Updating
+I recommend deleting your old `config.yml` file in-order to make sure new options are applied!
+
+# Usage
+- /wstart [size] [prepTime] [borderCloseTime] [borderCloseSpeed] [eventCooldown]: Starts the match
+- /wend: Ends the match
+- /wforceteam [player] [team]: Forces target player onto a team
+- /wleaderboard: Shows the top five players of the walls
+- Settings can be found in `/plugins/TheWalls/config.yml`
+
 # Known Issues
 
 - Not everything has been tested: there may be bugs
