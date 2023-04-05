@@ -12,7 +12,7 @@
 
 # Installation
 1. Have a spigot or paper MC server
-2. Download `TheWalls-1.2.1.jar` from below
+2. Download the latest .jar release 
 3. Drop the .jar into your `/plugins` folder
 4. Reload/Launch your server
 
