@@ -3,23 +3,12 @@ package ca.camerxn.thewalls.Walls;
 import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-
-class SpawnProtectionBlock {
-    Location loc;
-    Material block;
-
-    public SpawnProtectionBlock(Location loc, Material mat) {
-        this.loc = loc;
-        this.block = mat;
-    }
-}
 
 public class World {
 
@@ -28,12 +17,17 @@ public class World {
     public static int[] positionOne = new int[2];
     public static int[] positionTwo = new int[2];
 
-    public static ArrayList<Material> originalBlocks = new ArrayList<>();
-    public static ArrayList<Material> originalWallBlocks = new ArrayList<>();
-    public static ArrayList<SpawnProtectionBlock> spawnBlocks = new ArrayList<>();
+    public static ArrayList<TempBlock> originalBlocks = new ArrayList<>();
+    public static ArrayList<TempBlock> originalWallBlocks = new ArrayList<>();
 
     // This method does take a while if the map size if >50;
     public static void save() {
+        for (Entity ent : world.getEntities()) {
+            if (ent.getType() == EntityType.DROPPED_ITEM) {
+                ent.remove();
+            }
+        }
+
         if (!Config.data.getBoolean("world.saving")) return;
 
         Utils.getPlugin().getLogger().info("Saving original world data...");
@@ -45,12 +39,11 @@ public class World {
         }
 
         // Constant (10) is for safety with TNT explosions and other things.
-        int i = 0;
         for (int x = positionTwo[0] - 10; x < positionOne[0] + 10; x++) {
             for (int z = positionTwo[1] - 10; z < positionOne[1] + 10; z++) {
                 for (int y = -64; y < 325; y++) {
-                    originalBlocks.add(i, world.getBlockAt(x, y, z).getType());
-                    i++;
+                    if (world.getBlockAt(x, y, z).getType() == Material.AIR) continue;
+                    originalBlocks.add(new TempBlock(world.getBlockAt(x, y, z).getLocation(), world.getBlockAt(x, y, z).getType()));
                 }
             }
         }
@@ -84,21 +77,13 @@ public class World {
             }
         }
 
-        int i = 0;
-        for (int x = positionTwo[0] - 10; x < positionOne[0] + 10; x++) {
-            for (int z = positionTwo[1] - 10; z < positionOne[1] + 10; z++) {
-                for (int y = -64; y < 325; y++) {
-                    world.getBlockAt(x, y, z).setType(originalBlocks.get(i));
-                    i++;
-                }
-            }
+        for (TempBlock oBlock : originalBlocks) {
+            world.getBlockAt(oBlock.loc).setType(oBlock.block);
+        }
+        for (TempBlock wBlock : originalWallBlocks) {
+            world.getBlockAt(wBlock.loc).setType(wBlock.block);
         }
 
-        for (SpawnProtectionBlock sBlock : spawnBlocks) {
-            World.world.getBlockAt(sBlock.loc).setType(sBlock.block);
-        }
-
-        spawnBlocks.clear();
         originalWallBlocks.clear();
         originalBlocks.clear();
 
@@ -113,11 +98,6 @@ public class World {
 
     // Save and spawn (bedrock) blocks for the actual walls
     public static void wallBlocks() {
-        for (Entity ent : world.getEntities()) {
-            if (ent.getType() == EntityType.DROPPED_ITEM) {
-                ent.remove();
-            }
-        }
         Utils.getPlugin().getLogger().info("Saving original wall blocks...");
 
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -126,19 +106,18 @@ public class World {
             }
         }
 
-        int i = 0;
         for (int x = positionTwo[0]; x < positionOne[0]; x++) {
             for (int y = -64; y < 325; y++) {
-                originalWallBlocks.add(i, world.getBlockAt(x, y, positionOne[1] - Game.size).getType());
+                if (world.getBlockAt(x, y, positionOne[1] - Game.size).getType() == Material.BEDROCK) continue;
+                originalWallBlocks.add(new TempBlock(world.getBlockAt(x, y, positionOne[1] - Game.size).getLocation(), world.getBlockAt(x, y, positionOne[1] - Game.size).getType()));
                 world.getBlockAt(x, y, positionOne[1] - Game.size).setType(Material.BEDROCK);
-                i++;
             }
         }
         for (int z = positionTwo[1]; z < positionOne[1]; z++) {
             for (int y = -64; y < 325; y++) {
-                originalWallBlocks.add(i, world.getBlockAt(positionOne[0] - Game.size, y, z).getType());
+                if (world.getBlockAt(positionOne[0] - Game.size, y, z).getType() == Material.BEDROCK) continue;
+                originalWallBlocks.add(new TempBlock(world.getBlockAt(positionOne[0] - Game.size, y, z).getLocation(), world.getBlockAt(positionOne[0] - Game.size, y, z).getType()));
                 world.getBlockAt(positionOne[0] - Game.size, y, z).setType(Material.BEDROCK);
-                i++;
             }
         }
 
@@ -152,18 +131,8 @@ public class World {
     }
 
     public static void dropWalls() {
-        int i = 0;
-        for (int x = positionTwo[0]; x < positionOne[0]; x++) {
-            for (int y = -64; y < 325; y++) {
-                world.getBlockAt(x, y, positionOne[1] - Game.size).setType(originalWallBlocks.get(i));
-                i++;
-            }
-        }
-        for (int z = positionTwo[1]; z < positionOne[1]; z++) {
-            for (int y = -64; y < 325; y++) {
-                world.getBlockAt(positionOne[0] - Game.size, y, z).setType(originalWallBlocks.get(i));
-                i++;
-            }
+        for (TempBlock wallBlock: originalWallBlocks) {
+            world.getBlockAt(wallBlock.loc).setType(wallBlock.block);
         }
     }
 

@@ -3,14 +3,21 @@ package ca.camerxn.thewalls.Events;
 import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.Utils;
 import ca.camerxn.thewalls.Walls.Game;
+import ca.camerxn.thewalls.Walls.TempBlock;
 import ca.camerxn.thewalls.Walls.World;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.FireworkEffect.Type;
 import org.bukkit.block.Chest;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -76,10 +83,22 @@ public class SupplyChest extends Event{
         int y = World.world.getHighestBlockYAt(randX, randZ);
 
         Location chestLoc = new Location(World.world, randX, y + 1, randZ);
+        World.originalBlocks.add(new TempBlock(chestLoc, World.world.getBlockAt(chestLoc).getType()));
         chestLoc.getBlock().setType(Material.CHEST);
         Chest chest = (Chest) chestLoc.getBlock().getState();
         int chestInv = rand.nextInt(chests.size());
         chest.getInventory().setContents(chests.get(chestInv));
+
+        Firework firework = (Firework) World.world.spawnEntity(chestLoc.add(0, 4, 0), EntityType.FIREWORK);
+        FireworkMeta meta = firework.getFireworkMeta();
+        FireworkEffect.Builder fwb = FireworkEffect.builder();
+        fwb.flicker(true);
+        fwb.trail(true);
+        fwb.with(Type.BALL_LARGE);
+        fwb.withColor(Color.GREEN);
+        fwb.withFade(Color.RED);
+        meta.addEffect(fwb.build());
+        firework.setFireworkMeta(meta);
 
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 255, 1);

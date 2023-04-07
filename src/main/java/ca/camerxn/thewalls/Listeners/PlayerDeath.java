@@ -32,7 +32,7 @@ public class PlayerDeath implements Listener {
 
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.playSound(ply.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 100, 1);
-            LightningStrike strike = World.world.strikeLightning(ply.getLocation());
+            LightningStrike strike = World.world.strikeLightning(ply.getLocation().add(0, 15, 0));
             strike.setVisualFire(false);
             strike.setFireTicks(0);
         }

@@ -81,20 +81,15 @@ public class Game {
             new Team(3, false);
         }
 
+        World.save();
+        World.wallBlocks();
+        
         int i = 0;
         for (Player p : Bukkit.getOnlinePlayers()) {
             teams.get(i % 4).members.add(p);
             teams.get(i % 4).readyPlayer(p);
             i++;
         }
-
-        Bukkit.getScheduler().runTask(Utils.getPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                World.save();
-                World.wallBlocks();
-            }
-        });
 
         // Register events
         if (Config.data.getBoolean("events.tnt.enabled"))

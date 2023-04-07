@@ -2,6 +2,7 @@ package ca.camerxn.thewalls.Events;
 
 import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.Utils;
+import ca.camerxn.thewalls.Walls.TempBlock;
 import ca.camerxn.thewalls.Walls.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,16 +14,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-
-class TempBlock {
-    Location blockLoc;
-    Material blockType;
-
-    public TempBlock(Location loc, Material mat) {
-        this.blockLoc = loc;
-        this.blockType = mat;
-    }
-}
 
 class SinkHoleHandler {
     Player p;
@@ -50,15 +41,13 @@ class SinkHoleHandler {
 
             if (timer <= 0 && !sunk) {
                 stand.remove();
-                int i = 0;
                 for (int x = -size; x < (size + 1); x++) {
                     for (int z = -size; z < (size + 1); z++) {
                         for (int y = -64; y < 325; y++) {
                             if (World.world.getBlockAt(playerLoc.getBlockX() + x, y, playerLoc.getBlockZ() + z).getType() == Material.AIR) continue;
                             Block temp = World.world.getBlockAt(playerLoc.getBlockX() + x, y, playerLoc.getBlockZ() + z);
-                            blocks.add(i, new TempBlock(temp.getLocation(), temp.getType()));
+                            blocks.add(new TempBlock(temp.getLocation(), temp.getType()));
                             World.world.getBlockAt(playerLoc.getBlockX() + x, y, playerLoc.getBlockZ() + z).setType(Material.AIR);
-                            i++;
                         }
                     }
                 }
@@ -66,10 +55,9 @@ class SinkHoleHandler {
             }
 
             if (timer <= -Config.data.getInt("events.sinkHole.timeUntilReset") && sunk && blocks.size() >= 1) {
-                for (TempBlock temp : blocks) {
-                    World.world.getBlockAt(temp.blockLoc).setType(temp.blockType);
+                for (TempBlock b : blocks) {
+                    World.world.getBlockAt(b.loc).setType(b.block);
                 }
-
                 Bukkit.getScheduler().cancelTask(taskID);
             }
 
