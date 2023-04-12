@@ -2,6 +2,8 @@
   <img width="250" height="250" src="https://github.com/Camerxxn/The-Walls/blob/main/src/main/resources/Icon.png" />
 </div>
 
+**Currently Broken**
+
 ## Features
 
 - A lot of Events
