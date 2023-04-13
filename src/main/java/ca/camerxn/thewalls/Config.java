@@ -125,6 +125,15 @@ public class Config {
                 data.set("theWalls.autoExecute.speedOfBorderClose", 180);
                 data.set("theWalls.autoExecute.worldName", "world");
             }
+            if (!data.isSet("events.bossMan.enabled")) {
+                data.set("events.bossMan.enabled", true);
+                data.set("events.bossMan.prepTime", 3);
+                data.set("events.bossMan.dropRate", 0.35f);
+                data.set("events.bossMan.protectionLevel", 3);
+                data.set("events.bossMan.resistance", 1);
+                data.set("events.bossMan.name", "Boss Man Jim");
+            }
+
             data.save(dataFile);
 
             leaderboardFile = new File(Utils.getPlugin().getDataFolder(), "leaderboard.yml");

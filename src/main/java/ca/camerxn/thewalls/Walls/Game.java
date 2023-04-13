@@ -106,9 +106,10 @@ public class Game {
             new LocationReveal("Location Reveal");
         if (Config.data.getBoolean("events.sinkHole.enabled"))
             new SinkHole("Sink Hole");
-        if (Config.data.getBoolean("events.hailStorm.enabled")) {
+        if (Config.data.getBoolean("events.hailStorm.enabled"))
             new HailStorm("Hail of Arrows");
-        }
+        if (Config.data.getBoolean("events.bossMan.enabled"))
+            new BossMan("Boss Man");
 
         started = true;
         time = 0;

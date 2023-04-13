@@ -42,7 +42,6 @@ public class World {
         for (int x = positionTwo[0] - 10; x < positionOne[0] + 10; x++) {
             for (int z = positionTwo[1] - 10; z < positionOne[1] + 10; z++) {
                 for (int y = -64; y < 325; y++) {
-                    if (world.getBlockAt(x, y, z).getType() == Material.AIR) continue;
                     originalBlocks.add(new TempBlock(world.getBlockAt(x, y, z).getLocation(), world.getBlockAt(x, y, z).getType()));
                 }
             }

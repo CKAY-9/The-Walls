@@ -2,6 +2,7 @@ package ca.camerxn.thewalls.Events;
 
 import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.Utils;
+import ca.camerxn.thewalls.Walls.Game;
 import ca.camerxn.thewalls.Walls.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -24,6 +25,12 @@ class HandleChickens {
         chicken.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Config.data.getInt("events.gregs.timer") * 20, Config.data.getInt("events.gregs.speed"), true));
         chicken.setCustomName("Greg");
         runnable = Bukkit.getScheduler().scheduleSyncRepeatingTask(Utils.getPlugin(), () -> {
+            if (!Game.started) {
+                chicken.setHealth(0);
+                Bukkit.getScheduler().cancelTask(runnable);
+                return;
+            }
+
             if (countdown <= 0) {
                 chicken.setHealth(0);
                 chicken.damage(20);
