@@ -2,8 +2,8 @@
   <img width="250" height="250" src="https://github.com/Camerxxn/The-Walls/blob/main/src/main/resources/Icon.png" />
 </div>
 
-## Warning:
-I have decided that this project's structure has become spaghetti and is just too slippery to fix. Expect bugs and no more updates
+# Warning
+## I have decided that this project's structure has become spaghetti and is just too slippery to fix. Expect bugs and no more updates
 
 ## Features
 
