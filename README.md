@@ -3,7 +3,7 @@
 </div>
 
 # Warning
-## I have decided that this project's structure has become spaghetti and is just too slippery to fix. Expect bugs and no more updates
+### I have decided that this project's structure has become spaghetti and is just too slippery to fix. Expect bugs and no more updates
 
 ## Features
 
