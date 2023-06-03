@@ -12,16 +12,45 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import ca.camerxn.thewalls.Config;
+import ca.camerxn.thewalls.TheWalls;
 import ca.camerxn.thewalls.Utils;
-import ca.camerxn.thewalls.Walls.Game;
 import ca.camerxn.thewalls.Walls.Team;
+
+class BossManRunn implements Runnable {
+    BossManHandler handler;
+
+            
+    public BossManRunn(BossManHandler handler) {
+        this.handler = handler;
+    }
+    
+    public void run() {
+        if (!this.handler.walls.game.started) {
+            handler.boss.setHealth(0);
+            Bukkit.getServer().getScheduler().cancelTask(handler.taskID);
+            return;
+        }
+        if (handler.boss.isDead()) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                p.playSound(handler.ply.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 255, 1);
+                p.sendMessage(Utils.formatText("&l" + Team.getPlayerTeam(p, this.handler.walls.game.teams).teamColor + p.getName() + "&r&5 has slain a " + Config.data.getString("events.bossMan.name") + "!"));
+            }
+            Bukkit.getServer().getScheduler().cancelTask(handler.taskID);
+        } else {
+            handler.boss.setCustomName(Utils.formatText("&c&l" + Config.data.getString("events.bossMan.name") + ": " + Math.round(handler.boss.getHealth()) + " HP"));
+            handler.boss.setTarget(handler.ply);
+        }
+    }
+}
 
 class BossManHandler {
     Player ply;
     Zombie boss;
     int taskID;
+    TheWalls walls;
 
-    public BossManHandler(Player p) {
+    public BossManHandler(Player p, TheWalls walls) {
+        this.walls = walls;
         this.ply = p;
         ply.playSound(ply.getLocation(), Sound.ENTITY_ZOMBIE_AMBIENT, 255, 1);
         ply.sendMessage(Utils.formatText("&c&l" + Config.data.getString("events.bossMan.name") + " is about to spawn! You have " + Config.data.getInt("events.bossMan.prepTime") + "s to prepare!"));
@@ -69,39 +98,21 @@ class BossManHandler {
             }
         }, Config.data.getLong("events.bossMan.prepTime") * 20L);
 
-        taskID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Utils.getPlugin(), new Runnable() {
-            public void run() {
-                if (!Game.started) {
-                    boss.setHealth(0);
-                    Bukkit.getServer().getScheduler().cancelTask(taskID);
-                    return;
-                }
-                if (boss.isDead()) {
-                    for (Player p : Bukkit.getOnlinePlayers()) {
-                        p.playSound(ply.getLocation(), Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 255, 1);
-                        p.sendMessage(Utils.formatText("&l" + Team.getPlayerTeam(p).teamColor + p.getName() + "&r&5 has slain a " + Config.data.getString("events.bossMan.name") + "!"));
-                    }
-                    Bukkit.getServer().getScheduler().cancelTask(taskID);
-                } else {
-                    boss.setCustomName(Utils.formatText("&c&l" + Config.data.getString("events.bossMan.name") + ": " + Math.round(boss.getHealth()) + " HP"));
-                    boss.setTarget(ply);
-                }
-            }
-        }, Config.data.getLong("events.bossMan.prepTime") * 20L, 10L);
+        taskID = Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(Utils.getPlugin(), new BossManRunn(this), Config.data.getLong("events.bossMan.prepTime") * 20L, 10L);
     }
 }
 
 public class BossMan extends Event {
 
-    public BossMan(String eventName) {
-        super(eventName);
+    public BossMan(String eventName, TheWalls walls) {
+        super(eventName, walls);
     }
 
     @Override
     public void run() {
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (!Utils.isAlive(p)) continue;
-            new BossManHandler(p);
+            new BossManHandler(p, this.walls);
         }
     }
     

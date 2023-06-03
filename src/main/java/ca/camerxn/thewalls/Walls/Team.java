@@ -1,6 +1,7 @@
 package ca.camerxn.thewalls.Walls;
 
 import ca.camerxn.thewalls.Config;
+import ca.camerxn.thewalls.TheWalls;
 import ca.camerxn.thewalls.Utils;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -13,50 +14,53 @@ public class Team {
     public int team; // 0 = red, 1 = blue, 2 = yellow, 3 = green
     public String teamName = "TBD";
     public String teamColor = "&f";
-    public Location teamSpawn = new Location(World.world, 0, 0, 0);
+    public Location teamSpawn;
     public boolean alive = false;
+    public TheWalls walls;
 
-    public Team(int _team, boolean overrideAlive) {
+    public Team(int _team, boolean overrideAlive, TheWalls walls) {
+        this.walls = walls;
+        new Location(this.walls.world.world, 0, 0, 0);
         team = _team;
         switch (team) {
             case 0:
                 teamName = Config.data.getString("teams.zero.name");
                 teamColor = Config.data.getString("teams.zero.color");
-                int x0 = World.positionOne[0] - (Game.size / 2);
-                int z0 = World.positionOne[1] - (Game.size / 2);
-                int y0 = World.world.getHighestBlockYAt(x0, z0);
-                teamSpawn = new Location(World.world, x0, y0, z0);
+                int x0 = this.walls.world.positionOne[0] - (this.walls.game.size / 2);
+                int z0 = this.walls.world.positionOne[1] - (this.walls.game.size / 2);
+                int y0 = this.walls.world.world.getHighestBlockYAt(x0, z0);
+                teamSpawn = new Location(this.walls.world.world, x0, y0, z0);
                 break;
             case 1:
                 teamName = Config.data.getString("teams.one.name");
                 teamColor = Config.data.getString("teams.one.color");
-                int x1 = World.positionTwo[0] + (Game.size / 2);
-                int z1 = World.positionTwo[1] + (Game.size / 2);
-                int y1 = World.world.getHighestBlockYAt(x1, z1);
-                teamSpawn = new Location(World.world, x1, y1, z1);
+                int x1 = this.walls.world.positionTwo[0] + (this.walls.game.size / 2);
+                int z1 = this.walls.world.positionTwo[1] + (this.walls.game.size / 2);
+                int y1 = this.walls.world.world.getHighestBlockYAt(x1, z1);
+                teamSpawn = new Location(this.walls.world.world, x1, y1, z1);
                 break;
             case 2:
                 teamName = Config.data.getString("teams.two.name");
                 teamColor = Config.data.getString("teams.two.color");
-                int x2 = (int) (World.positionOne[0] - (Game.size / 2));
-                int z2 = (int) (World.positionOne[1] - (Game.size * 1.5));
-                int y2 = World.world.getHighestBlockYAt(x2, z2);
-                teamSpawn = new Location(World.world, x2, y2, z2);
+                int x2 = (int) (this.walls.world.positionOne[0] - (this.walls.game.size / 2));
+                int z2 = (int) (this.walls.world.positionOne[1] - (this.walls.game.size * 1.5));
+                int y2 = this.walls.world.world.getHighestBlockYAt(x2, z2);
+                teamSpawn = new Location(this.walls.world.world, x2, y2, z2);
                 break;
             case 3:
                 teamName = Config.data.getString("teams.three.name");
                 teamColor = Config.data.getString("teams.three.color");
-                int x3 = (int) (World.positionTwo[0] + (Game.size / 2));
-                int z3 = (int) (World.positionTwo[1] + (Game.size * 1.5));
-                int y3 = World.world.getHighestBlockYAt(x3, z3);
-                teamSpawn = new Location(World.world, x3, y3, z3);
+                int x3 = (int) (this.walls.world.positionTwo[0] + (this.walls.game.size / 2));
+                int z3 = (int) (this.walls.world.positionTwo[1] + (this.walls.game.size * 1.5));
+                int y3 = this.walls.world.world.getHighestBlockYAt(x3, z3);
+                teamSpawn = new Location(this.walls.world.world, x3, y3, z3);
                 break;
         }
 
-        Game.teams.add(this);
+        this.walls.game.teams.add(this);
         if (!overrideAlive) {
             alive = true;
-            Game.aliveTeams.add(this);
+            this.walls.game.aliveTeams.add(this);
         }
     }
 
@@ -93,17 +97,17 @@ public class Team {
         ply.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, Config.data.getInt("players.spawn.steakAmount")));
 
         // Calc teamspawn in case of change
-        teamSpawn.setY(World.world.getHighestBlockYAt(teamSpawn.getBlockX(), teamSpawn.getBlockZ()));
+        teamSpawn.setY(this.walls.world.world.getHighestBlockYAt(teamSpawn.getBlockX(), teamSpawn.getBlockZ()));
         ply.teleport(teamSpawn.add(0, 2, 0));
         for (int x = -1; x < 2; x++) {
             for (int z = -1; z < 2; z++) {
-                World.world.getBlockAt(teamSpawn.getBlockX() + x, teamSpawn.getBlockY() - 1, teamSpawn.getBlockZ() + z).setType(Material.BEDROCK);
+                this.walls.world.world.getBlockAt(teamSpawn.getBlockX() + x, teamSpawn.getBlockY() - 1, teamSpawn.getBlockZ() + z).setType(Material.BEDROCK);
             }
         }
     }
 
-    public static Team getPlayerTeam(Player p) {
-        for (Team team : Game.teams) {
+    public static Team getPlayerTeam(Player p, ArrayList<Team> teams) {
+        for (Team team : teams) {
             for (Player ply : team.members) {
                 if (p == ply) {
                     return team;

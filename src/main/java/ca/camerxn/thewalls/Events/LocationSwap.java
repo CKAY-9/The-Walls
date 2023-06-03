@@ -1,5 +1,6 @@
 package ca.camerxn.thewalls.Events;
 
+import ca.camerxn.thewalls.TheWalls;
 import ca.camerxn.thewalls.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -10,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class LocationSwap extends Event {
-    public LocationSwap(String eventName) {
-        super(eventName);
+    public LocationSwap(String eventName, TheWalls walls) {
+        super(eventName, walls);
     }
 
     @Override

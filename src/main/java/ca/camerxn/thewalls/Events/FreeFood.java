@@ -1,9 +1,8 @@
 package ca.camerxn.thewalls.Events;
 
 import ca.camerxn.thewalls.Config;
+import ca.camerxn.thewalls.TheWalls;
 import ca.camerxn.thewalls.Utils;
-import ca.camerxn.thewalls.Walls.Game;
-import ca.camerxn.thewalls.Walls.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -18,14 +17,16 @@ class HandleChickens {
     Chicken chicken;
     int runnable;
     int countdown = Config.data.getInt("events.gregs.timer");
+    TheWalls walls;
 
-    public HandleChickens(Chicken _chicken, Player player) {
+    public HandleChickens(Chicken _chicken, Player player, TheWalls walls) {
+        this.walls = walls;
         chicken = _chicken;
         chicken.setAdult();
         chicken.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Config.data.getInt("events.gregs.timer") * 20, Config.data.getInt("events.gregs.speed"), true));
         chicken.setCustomName("Greg");
         runnable = Bukkit.getScheduler().scheduleSyncRepeatingTask(Utils.getPlugin(), () -> {
-            if (!Game.started) {
+            if (!this.walls.game.started) {
                 chicken.setHealth(0);
                 Bukkit.getScheduler().cancelTask(runnable);
                 return;
@@ -44,8 +45,8 @@ class HandleChickens {
 }
 
 public class FreeFood extends Event {
-    public FreeFood(String eventName) {
-        super(eventName);
+    public FreeFood(String eventName, TheWalls walls) {
+        super(eventName, walls);
     }
 
     @Override
@@ -60,8 +61,8 @@ public class FreeFood extends Event {
             p.getInventory().setItemInOffHand(new ItemStack(Material.WHEAT_SEEDS, 32));
 
             for (int i = 0; i < Config.data.getInt("events.gregs.amount"); i++) {
-                Chicken chicken = (Chicken) World.world.spawnEntity(p.getLocation(), EntityType.CHICKEN);
-                new HandleChickens(chicken, p);
+                Chicken chicken = (Chicken) this.walls.world.world.spawnEntity(p.getLocation(), EntityType.CHICKEN);
+                new HandleChickens(chicken, p, this.walls);
             }
         }
     }

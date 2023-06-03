@@ -1,9 +1,8 @@
 package ca.camerxn.thewalls.Listeners;
 
 import ca.camerxn.thewalls.Config;
+import ca.camerxn.thewalls.TheWalls;
 import ca.camerxn.thewalls.Utils;
-import ca.camerxn.thewalls.Walls.Game;
-import ca.camerxn.thewalls.Walls.World;
 import org.bukkit.Material;
 import org.bukkit.entity.Chicken;
 import org.bukkit.event.EventHandler;
@@ -15,9 +14,15 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Random;
 
 public class EntityDeath implements Listener {
+    public TheWalls walls;
+
+    public EntityDeath(TheWalls walls) {
+        this.walls = walls;
+    }
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDeath(EntityDeathEvent e) {
-        if (!Game.started) return;
+        if (!this.walls.game.started) return;
 
         // Related to FreeFood event
         if (Config.data.getBoolean("events.gregs.enabled")) {
@@ -29,7 +34,7 @@ public class EntityDeath implements Listener {
                     e.getEntity().getKiller().getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE, 2));
                     e.getEntity().getKiller().sendMessage(Utils.formatText("&2Greg has spared you and has given you some &e&lGolden Apples!"));
                 } else {
-                    World.world.createExplosion(e.getEntity().getLocation(), Config.data.getInt("events.gregs.power"), Config.data.getBoolean("events.gregs.fireExplosion"));
+                    this.walls.world.world.createExplosion(e.getEntity().getLocation(), Config.data.getInt("events.gregs.power"), Config.data.getBoolean("events.gregs.fireExplosion"));
                 }
             }
         }

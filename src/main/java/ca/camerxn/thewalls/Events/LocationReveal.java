@@ -1,8 +1,8 @@
 package ca.camerxn.thewalls.Events;
 
 import ca.camerxn.thewalls.Config;
+import ca.camerxn.thewalls.TheWalls;
 import ca.camerxn.thewalls.Utils;
-import ca.camerxn.thewalls.Walls.Game;
 import ca.camerxn.thewalls.Walls.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -13,13 +13,13 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.Random;
 
 public class LocationReveal extends Event {
-    public LocationReveal(String eventName) {
-        super(eventName);
+    public LocationReveal(String eventName, TheWalls walls) {
+        super(eventName, walls);
     }
 
     @Override
     public void run() {
-        for (Team t : Game.aliveTeams) {
+        for (Team t : this.walls.game.aliveTeams) {
             if (!t.alive) continue;
             if (t.members.size() == 0) continue;
             int r = new Random().nextInt(t.members.size());

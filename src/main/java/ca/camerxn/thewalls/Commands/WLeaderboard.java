@@ -12,9 +12,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import ca.camerxn.thewalls.Config;
+import ca.camerxn.thewalls.TheWalls;
 import ca.camerxn.thewalls.Utils;
 
 public class WLeaderboard implements CommandExecutor {
+    public TheWalls walls;
+    public WLeaderboard(TheWalls walls) {
+        this.walls = walls;
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

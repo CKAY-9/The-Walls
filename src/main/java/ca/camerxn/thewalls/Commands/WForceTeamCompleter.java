@@ -1,6 +1,8 @@
 package ca.camerxn.thewalls.Commands;
 
 import ca.camerxn.thewalls.Config;
+import ca.camerxn.thewalls.TheWalls;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -10,6 +12,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class WForceTeamCompleter implements TabCompleter {
+    public TheWalls walls;
+    public WForceTeamCompleter(TheWalls walls) {
+        this.walls = walls;
+    }
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.isOp()) {

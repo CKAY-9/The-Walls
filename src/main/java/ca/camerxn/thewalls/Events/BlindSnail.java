@@ -1,6 +1,7 @@
 package ca.camerxn.thewalls.Events;
 
 import ca.camerxn.thewalls.Config;
+import ca.camerxn.thewalls.TheWalls;
 import ca.camerxn.thewalls.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -9,8 +10,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public class BlindSnail extends Event {
-    public BlindSnail(String eventName) {
-        super(eventName);
+    public BlindSnail(String eventName, TheWalls walls) {
+        super(eventName, walls);
     }
 
     @Override

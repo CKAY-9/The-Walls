@@ -1,9 +1,8 @@
 package ca.camerxn.thewalls.Events;
 
 import ca.camerxn.thewalls.Config;
+import ca.camerxn.thewalls.TheWalls;
 import ca.camerxn.thewalls.Utils;
-import ca.camerxn.thewalls.Walls.Game;
-import ca.camerxn.thewalls.Walls.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -62,8 +61,8 @@ public class SupplyChest extends Event{
     };
     ArrayList<ItemStack[]> chests = new ArrayList<>();
 
-    public SupplyChest(String eventName) {
-        super(eventName);
+    public SupplyChest(String eventName, TheWalls walls) {
+        super(eventName, walls);
         chests.add(enchantChest);
         chests.add(gearChest);
         chests.add(griefChest);
@@ -73,21 +72,21 @@ public class SupplyChest extends Event{
     @Override
     public void run() {
         double reducer = 1 - Config.data.getDouble("events.supplyChest.allowedRegionPercentageOfSize");
-        int[] positionOne = new int[]{(int) (World.positionOne[0] - (Game.size * reducer)), (int) (World.positionOne[1] - (Game.size * reducer))};
-        int[] positionTwo = new int[]{(int) (World.positionTwo[0] + (Game.size * reducer)), (int) (World.positionTwo[1] + (Game.size * reducer))};
+        int[] positionOne = new int[]{(int) (this.walls.world.positionOne[0] - (this.walls.game.size * reducer)), (int) (this.walls.world.positionOne[1] - (this.walls.game.size * reducer))};
+        int[] positionTwo = new int[]{(int) (this.walls.world.positionTwo[0] + (this.walls.game.size * reducer)), (int) (this.walls.world.positionTwo[1] + (this.walls.game.size * reducer))};
 
         Random rand = new Random();
         int randX = rand.nextInt(positionOne[0] - positionTwo[0]) + positionTwo[0];
         int randZ = rand.nextInt(positionOne[1] - positionTwo[1]) + positionTwo[1];
-        int y = World.world.getHighestBlockYAt(randX, randZ);
+        int y = this.walls.world.world.getHighestBlockYAt(randX, randZ);
 
-        Location chestLoc = new Location(World.world, randX, y + 1, randZ);
+        Location chestLoc = new Location(this.walls.world.world, randX, y + 1, randZ);
         chestLoc.getBlock().setType(Material.CHEST);
         Chest chest = (Chest) chestLoc.getBlock().getState();
         int chestInv = rand.nextInt(chests.size());
         chest.getInventory().setContents(chests.get(chestInv));
 
-        Firework firework = (Firework) World.world.spawnEntity(chestLoc.add(0, 4, 0), EntityType.FIREWORK);
+        Firework firework = (Firework) this.walls.world.world.spawnEntity(chestLoc.add(0, 4, 0), EntityType.FIREWORK);
         FireworkMeta meta = firework.getFireworkMeta();
         FireworkEffect.Builder fwb = FireworkEffect.builder();
         fwb.flicker(true);

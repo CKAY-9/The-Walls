@@ -3,10 +3,18 @@ package ca.camerxn.thewalls.Commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+
+import ca.camerxn.thewalls.TheWalls;
+
 import java.util.Collections;
 import java.util.List;
 
 public class WStartCompleter implements TabCompleter {
+    public TheWalls walls;
+    public WStartCompleter(TheWalls walls) {
+        this.walls = walls;
+    }
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.isOp()) {

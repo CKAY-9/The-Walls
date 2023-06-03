@@ -1,9 +1,9 @@
 package ca.camerxn.thewalls.Events;
 
 import ca.camerxn.thewalls.Config;
+import ca.camerxn.thewalls.TheWalls;
 import ca.camerxn.thewalls.Utils;
 import ca.camerxn.thewalls.Walls.TempBlock;
-import ca.camerxn.thewalls.Walls.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,11 +21,13 @@ class SinkHoleHandler {
     private int taskID = 0;
     private boolean sunk = false;
     private final ArrayList<TempBlock> blocks = new ArrayList<>();
+    TheWalls walls;
 
-    public SinkHoleHandler(Player p) {
+    public SinkHoleHandler(Player p, TheWalls walls) {
         this.p = p;
+        this.walls = walls;
 
-        ArmorStand stand = (ArmorStand) World.world.spawnEntity(p.getLocation().subtract(0, 2, 0), EntityType.ARMOR_STAND);
+        ArmorStand stand = (ArmorStand) this.walls.world.world.spawnEntity(p.getLocation().subtract(0, 2, 0), EntityType.ARMOR_STAND);
         stand.setVisible(false);
         stand.setGravity(false);
         stand.setSmall(true);
@@ -44,10 +46,10 @@ class SinkHoleHandler {
                 for (int x = -size; x < (size + 1); x++) {
                     for (int z = -size; z < (size + 1); z++) {
                         for (int y = -64; y < 325; y++) {
-                            if (World.world.getBlockAt(playerLoc.getBlockX() + x, y, playerLoc.getBlockZ() + z).getType() == Material.AIR) continue;
-                            Block temp = World.world.getBlockAt(playerLoc.getBlockX() + x, y, playerLoc.getBlockZ() + z);
+                            if (this.walls.world.world.getBlockAt(playerLoc.getBlockX() + x, y, playerLoc.getBlockZ() + z).getType() == Material.AIR) continue;
+                            Block temp = this.walls.world.world.getBlockAt(playerLoc.getBlockX() + x, y, playerLoc.getBlockZ() + z);
                             blocks.add(new TempBlock(temp.getLocation(), temp.getType()));
-                            World.world.getBlockAt(playerLoc.getBlockX() + x, y, playerLoc.getBlockZ() + z).setType(Material.AIR);
+                            this.walls.world.world.getBlockAt(playerLoc.getBlockX() + x, y, playerLoc.getBlockZ() + z).setType(Material.AIR);
                         }
                     }
                 }
@@ -56,7 +58,7 @@ class SinkHoleHandler {
 
             if (timer <= -Config.data.getInt("events.sinkHole.timeUntilReset") && sunk && blocks.size() >= 1) {
                 for (TempBlock b : blocks) {
-                    World.world.getBlockAt(b.loc).setType(b.block);
+                    this.walls.world.world.getBlockAt(b.loc).setType(b.block);
                 }
                 Bukkit.getScheduler().cancelTask(taskID);
             }
@@ -68,8 +70,8 @@ class SinkHoleHandler {
 
 public class SinkHole extends Event {
 
-    public SinkHole(String eventName) {
-        super(eventName);
+    public SinkHole(String eventName, TheWalls walls) {
+        super(eventName, walls);
     }
 
     @Override
@@ -78,7 +80,7 @@ public class SinkHole extends Event {
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_GUITAR, 255, 1);
             p.sendMessage(Utils.formatText("&0&lSink Hole&r&c opening in " + Config.data.getInt("events.sinkHole.seconds") + "s!"));
             if (!Utils.isAlive(p)) continue;
-            new SinkHoleHandler(p);
+            new SinkHoleHandler(p, this.walls);
         }
     }
 }

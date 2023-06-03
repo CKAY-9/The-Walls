@@ -1,8 +1,8 @@
 package ca.camerxn.thewalls.Commands;
 
 import ca.camerxn.thewalls.Config;
+import ca.camerxn.thewalls.TheWalls;
 import ca.camerxn.thewalls.Utils;
-import ca.camerxn.thewalls.Walls.Game;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,6 +10,11 @@ import org.bukkit.entity.Player;
 
 // Start command for The Walls
 public class WStart implements CommandExecutor {
+    public TheWalls walls;
+    public WStart(TheWalls walls) {
+        this.walls = walls;
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.isOp()) {
@@ -22,37 +27,37 @@ public class WStart implements CommandExecutor {
             return false;
         }
 
-        if (Game.started) {
+        if (this.walls.game.started) {
             sender.sendMessage(Utils.formatText("&cThere is already an ongoing game of The Walls!"));
             return false;
         }
 
         try {
 
-            Game.size = Config.data.getInt("theWalls.autoExecute.size");
+            this.walls.game.size = Config.data.getInt("theWalls.autoExecute.size");
             if (args.length >= 1) {
-                Game.size = Integer.parseInt(args[0]);
+                this.walls.game.size = Integer.parseInt(args[0]);
             }
-            Game.prepTime = Config.data.getInt("theWalls.autoExecute.prepTime");
+            this.walls.game.prepTime = Config.data.getInt("theWalls.autoExecute.prepTime");
             if (args.length >= 2) {
-                Game.prepTime = Integer.parseInt(args[1]);
+                this.walls.game.prepTime = Integer.parseInt(args[1]);
             }
-            Game.borderCloseTime = Config.data.getInt("theWalls.autoExecute.timeUntilBorderClose");
+            this.walls.game.borderCloseTime = Config.data.getInt("theWalls.autoExecute.timeUntilBorderClose");
             if (args.length >= 3) {
-                Game.borderCloseTime = Integer.parseInt(args[2]);
+                this.walls.game.borderCloseTime = Integer.parseInt(args[2]);
             }
-            Game.borderCloseSpeed = Config.data.getInt("theWalls.autoExecute.speedOfBorderClose");
+            this.walls.game.borderCloseSpeed = Config.data.getInt("theWalls.autoExecute.speedOfBorderClose");
             if (args.length >= 4) {
-                Game.borderCloseSpeed = Integer.parseInt(args[3]);
+                this.walls.game.borderCloseSpeed = Integer.parseInt(args[3]);
             }
-            Game.eventCooldown = Config.data.getInt("theWalls.autoExecute.eventCooldown");
+            this.walls.game.eventCooldown = Config.data.getInt("theWalls.autoExecute.eventCooldown");
             if (args.length >= 5) {
-                Game.eventCooldown = Integer.parseInt(args[4]);
+                this.walls.game.eventCooldown = Integer.parseInt(args[4]);
             }
             if (sender instanceof Player) {
-                Game.start((Player) sender);
+                this.walls.game.start((Player) sender);
             } else {
-                Game.start(null);
+                this.walls.game.start(null);
             }
         } catch (Exception ex) {
             sender.sendMessage(Utils.formatText("&cIssues starting The Walls!"));

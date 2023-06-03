@@ -1,6 +1,7 @@
 package ca.camerxn.thewalls.Walls;
 
 import ca.camerxn.thewalls.Config;
+import ca.camerxn.thewalls.TheWalls;
 import ca.camerxn.thewalls.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -12,16 +13,21 @@ import java.util.ArrayList;
 
 public class World {
 
-    public static org.bukkit.World world;
+    public TheWalls walls;
+    public org.bukkit.World world;
 
-    public static int[] positionOne = new int[2];
-    public static int[] positionTwo = new int[2];
+    public int[] positionOne = new int[2];
+    public int[] positionTwo = new int[2];
 
-    public static ArrayList<TempBlock> originalBlocks = new ArrayList<>();
-    public static ArrayList<TempBlock> originalWallBlocks = new ArrayList<>();
+    public ArrayList<TempBlock> originalBlocks = new ArrayList<>();
+    public ArrayList<TempBlock> originalWallBlocks = new ArrayList<>();
+
+    public World(TheWalls walls) {
+        this.walls = walls;
+    }
 
     // This method does take a while if the map size if >50;
-    public static void save() {
+    public void save() {
         for (Entity ent : world.getEntities()) {
             if (ent.getType() == EntityType.DROPPED_ITEM) {
                 ent.remove();
@@ -56,7 +62,7 @@ public class World {
     }
 
     // Replace all the blocks in the world with the originals
-    public static void reset() {
+    public void reset() {
         world.getWorldBorder().setCenter(0, 0);
         world.getWorldBorder().setSize(29999980);
         world.getWorldBorder().setDamageAmount(0);
@@ -96,7 +102,7 @@ public class World {
     }
 
     // Save and spawn (bedrock) blocks for the actual walls
-    public static void wallBlocks() {
+    public void wallBlocks() {
         Utils.getPlugin().getLogger().info("Saving original wall blocks...");
 
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -107,16 +113,16 @@ public class World {
 
         for (int x = positionTwo[0]; x < positionOne[0]; x++) {
             for (int y = -64; y < 325; y++) {
-                if (world.getBlockAt(x, y, positionOne[1] - Game.size).getType() == Material.BEDROCK) continue;
-                originalWallBlocks.add(new TempBlock(world.getBlockAt(x, y, positionOne[1] - Game.size).getLocation(), world.getBlockAt(x, y, positionOne[1] - Game.size).getType()));
-                world.getBlockAt(x, y, positionOne[1] - Game.size).setType(Material.BEDROCK);
+                if (world.getBlockAt(x, y, positionOne[1] - this.walls.game.size).getType() == Material.BEDROCK) continue;
+                originalWallBlocks.add(new TempBlock(world.getBlockAt(x, y, positionOne[1] - this.walls.game.size).getLocation(), world.getBlockAt(x, y, positionOne[1] - this.walls.game.size).getType()));
+                world.getBlockAt(x, y, positionOne[1] - this.walls.game.size).setType(Material.BEDROCK);
             }
         }
         for (int z = positionTwo[1]; z < positionOne[1]; z++) {
             for (int y = -64; y < 325; y++) {
-                if (world.getBlockAt(positionOne[0] - Game.size, y, z).getType() == Material.BEDROCK) continue;
-                originalWallBlocks.add(new TempBlock(world.getBlockAt(positionOne[0] - Game.size, y, z).getLocation(), world.getBlockAt(positionOne[0] - Game.size, y, z).getType()));
-                world.getBlockAt(positionOne[0] - Game.size, y, z).setType(Material.BEDROCK);
+                if (world.getBlockAt(positionOne[0] - this.walls.game.size, y, z).getType() == Material.BEDROCK) continue;
+                originalWallBlocks.add(new TempBlock(world.getBlockAt(positionOne[0] - this.walls.game.size, y, z).getLocation(), world.getBlockAt(positionOne[0] - this.walls.game.size, y, z).getType()));
+                world.getBlockAt(positionOne[0] - this.walls.game.size, y, z).setType(Material.BEDROCK);
             }
         }
 
@@ -129,7 +135,7 @@ public class World {
         }
     }
 
-    public static void dropWalls() {
+    public void dropWalls() {
         for (TempBlock wallBlock: originalWallBlocks) {
             world.getBlockAt(wallBlock.loc).setType(wallBlock.block);
         }

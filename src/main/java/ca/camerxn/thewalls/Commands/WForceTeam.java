@@ -1,8 +1,8 @@
 package ca.camerxn.thewalls.Commands;
 
 import ca.camerxn.thewalls.Config;
+import ca.camerxn.thewalls.TheWalls;
 import ca.camerxn.thewalls.Utils;
-import ca.camerxn.thewalls.Walls.Game;
 import ca.camerxn.thewalls.Walls.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -14,17 +14,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class WForceTeam implements CommandExecutor {
+    public TheWalls walls;
+    public WForceTeam(TheWalls walls) {
+        this.walls = walls;
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.isOp()) {
             sender.sendMessage(Utils.formatText("&cYou don't have the permissions to run this command!"));
             return false;
         }
-        if (!Game.started) {
+        if (!this.walls.game.started) {
             sender.sendMessage(Utils.formatText("&cThere is no game currently going on!"));
             return false;
         }
-        if (Game.borderClosing) {
+        if (this.walls.game.borderClosing) {
             sender.sendMessage(Utils.formatText("&cThis command cannot be performed when the borders are closing!"));
             return false;
         }
@@ -42,14 +47,14 @@ public class WForceTeam implements CommandExecutor {
             String newTeam = newTeamBuilder.toString();
             boolean flag = false;
 
-            for (int i = 0; i < Game.teams.size(); i++) {
-                Team temp = Game.teams.get(i);
+            for (int i = 0; i < this.walls.game.teams.size(); i++) {
+                Team temp = this.walls.game.teams.get(i);
                 if (temp.teamName.toLowerCase().equalsIgnoreCase(newTeam)) {
-                    Team prev = Team.getPlayerTeam(target);
+                    Team prev = Team.getPlayerTeam(target, this.walls.game.teams);
 
                     if (!temp.alive) {
                         temp.alive = true;
-                        Game.aliveTeams.add(temp);
+                        this.walls.game.aliveTeams.add(temp);
                     }
 
                     temp.members.add(target);
@@ -59,8 +64,8 @@ public class WForceTeam implements CommandExecutor {
                     if (prev != null) {
                         prev.members.remove(target);
                         if (prev.members.size() == 0) {
-                            Game.aliveTeams.remove(prev);
-                            Game.teams.remove(prev);
+                            this.walls.game.aliveTeams.remove(prev);
+                            this.walls.game.teams.remove(prev);
                         }
                     }
 
@@ -70,7 +75,7 @@ public class WForceTeam implements CommandExecutor {
             }
             // create relevant team;
             if (!flag) {
-                Team prev = Team.getPlayerTeam(target);
+                Team prev = Team.getPlayerTeam(target, this.walls.game.teams);
 
                 int teamID = 0;
                 if (newTeam.equalsIgnoreCase(Config.data.getString("teams.one.name").toLowerCase())) {
@@ -83,7 +88,7 @@ public class WForceTeam implements CommandExecutor {
                     teamID = 3;
                 }
 
-                Team newT = new Team(teamID, false);
+                Team newT = new Team(teamID, false, this.walls);
                 newT.members.add(target);
                 target.teleport(newT.teamSpawn);
                 target.sendMessage(Utils.formatText(newT.teamColor + "You have been swapped to " + newT.teamName + " team!"));
@@ -91,13 +96,13 @@ public class WForceTeam implements CommandExecutor {
                 if (prev != null) {
                     prev.members.remove(target);
                     if (prev.members.size() == 0) {
-                        Game.aliveTeams.remove(prev);
-                        Game.teams.remove(prev);
+                        this.walls.game.aliveTeams.remove(prev);
+                        this.walls.game.teams.remove(prev);
                     }
                 }
             }
 
-            Team finalTeam = Team.getPlayerTeam(target);
+            Team finalTeam = Team.getPlayerTeam(target, this.walls.game.teams);
             if (finalTeam != null) {
                 target.setDisplayName(Utils.formatText(finalTeam.teamColor + "[" + finalTeam.teamName + "] " + target.getName()));
                 target.setPlayerListName(Utils.formatText(finalTeam.teamColor + "[" + finalTeam.teamName + "] " + target.getName()));
