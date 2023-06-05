@@ -3,6 +3,8 @@ package ca.camerxn.thewalls.Walls;
 import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.TheWalls;
 import ca.camerxn.thewalls.Utils;
+import ca.camerxn.thewalls.Commands.WEvents;
+
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -75,6 +77,7 @@ public class Team {
     }
 
     public void readyPlayer(Player ply) {
+        WEvents.annouceEvents(ply);
         ply.setHealth(20);
         ply.setSaturation(20);
 

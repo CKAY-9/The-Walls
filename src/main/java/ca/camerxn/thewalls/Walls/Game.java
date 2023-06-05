@@ -250,6 +250,8 @@ public class Game {
             new HailStorm("Hail of Arrows", this.walls);
         if (Config.data.getBoolean("events.bossMan.enabled"))
             new BossMan("Boss Man", this.walls);
+        if (Config.data.getBoolean("events.itemCheck.enabled"))
+            new ItemCheck("Item Check", this.walls);
 
         started = true;
         time = 0;

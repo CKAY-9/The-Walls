@@ -133,6 +133,10 @@ public class Config {
                 data.set("events.bossMan.resistance", 1);
                 data.set("events.bossMan.name", "Boss Man Jim");
             }
+            if (!data.isSet("events.itemCheck.enabled")) {
+                data.set("events.itemCheck.enabled", true);
+                data.set("events.itemCheck.timeLimit", 30);
+            }
 
             data.save(dataFile);
 
