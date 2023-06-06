@@ -15,6 +15,7 @@ public class WEvents implements CommandExecutor {
         this.walls = walls;
     }
 
+    // This is pub static because Walls/Game.java also uses this to notify players
     public static void annouceEvents(Player sender) {
         sender.sendMessage(Utils.formatText("&a[The Walls] Enabled Events: "));
 
