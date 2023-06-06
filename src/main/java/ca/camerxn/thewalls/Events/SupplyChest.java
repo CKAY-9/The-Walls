@@ -3,6 +3,7 @@ package ca.camerxn.thewalls.Events;
 import ca.camerxn.thewalls.Config;
 import ca.camerxn.thewalls.TheWalls;
 import ca.camerxn.thewalls.Utils;
+import ca.camerxn.thewalls.Walls.TempBlock;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -81,6 +82,9 @@ public class SupplyChest extends Event{
         int y = this.walls.world.world.getHighestBlockYAt(randX, randZ);
 
         Location chestLoc = new Location(this.walls.world.world, randX, y + 1, randZ);
+        TempBlock t = new TempBlock(chestLoc, chestLoc.getBlock().getType());
+        this.walls.world.originalBlocks.add(t);
+      
         chestLoc.getBlock().setType(Material.CHEST);
         Chest chest = (Chest) chestLoc.getBlock().getState();
         int chestInv = rand.nextInt(chests.size());

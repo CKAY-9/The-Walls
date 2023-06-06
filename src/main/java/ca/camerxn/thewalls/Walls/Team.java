@@ -104,7 +104,10 @@ public class Team {
         ply.teleport(teamSpawn.add(0, 2, 0));
         for (int x = -1; x < 2; x++) {
             for (int z = -1; z < 2; z++) {
-                this.walls.world.world.getBlockAt(teamSpawn.getBlockX() + x, teamSpawn.getBlockY() - 1, teamSpawn.getBlockZ() + z).setType(Material.BEDROCK);
+                TempBlock temp = new TempBlock(new Location(this.walls.world.world, teamSpawn.getBlockX() + x, teamSpawn.getBlockY() - 1, teamSpawn.getBlockZ() + z),
+                    this.walls.world.world.getBlockAt(teamSpawn.getBlockX() + x, teamSpawn.getBlockY() - 1, teamSpawn.getBlockZ() + z).getType());
+                this.walls.world.originalBlocks.add(temp);
+                this.walls.world.world.getBlockAt(temp.loc).setType(Material.BEDROCK);
             }
         }
     }
