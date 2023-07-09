@@ -1,8 +1,8 @@
 name: TheWalls
 version: '${project.version}'
-main: ca.camerxn.thewalls.TheWalls
+main: ca.thewalls.TheWalls
 api-version: 1.19
-authors: [ Camerxn ]
+authors: [ CKAY9 ]
 description: Play The Walls in any Minecraft world
 commands:
   wstart:

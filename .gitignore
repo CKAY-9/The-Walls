@@ -6,7 +6,8 @@
 *.iws
 
 .vscode/
-
+.vim/
+.settings/
 # IntelliJ
 out/
 
