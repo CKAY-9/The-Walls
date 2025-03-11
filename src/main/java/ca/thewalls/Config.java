@@ -106,6 +106,12 @@ public class Config {
             if (!data.isSet("world.saving")) {
                 data.set("world.saving", true);
             }
+            if (!data.isSet("world.saveAir")) {
+                data.set("world.saveAir", true);
+            }
+            if (!data.isSet("world.safetyBounds")) {
+                data.set("world.safetyBounds", 3);
+            }
             if (!data.isSet("theWalls.legacyHud")) {
                 data.set("theWalls.legacyHud", false);
             }
@@ -136,6 +142,14 @@ public class Config {
             if (!data.isSet("events.itemCheck.enabled")) {
                 data.set("events.itemCheck.enabled", true);
                 data.set("events.itemCheck.timeLimit", 30);
+            }
+            if (!data.isSet("events.bombingRun.enabled")) {
+                data.set("events.bombingRun.enabled", true);
+                data.set("events.bombingRun.tntRange", 8);
+                data.set("events.bombingRun.tntDamage", 10);
+                data.set("events.bombingRun.tntSpread", 2);
+                data.set("events.bombingRun.alertTime", 5);
+                data.set("events.bombingRun.detonationtime", 10);
             }
 
             data.save(dataFile);

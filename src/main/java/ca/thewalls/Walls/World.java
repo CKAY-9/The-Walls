@@ -17,6 +17,14 @@ public class World {
     public TheWalls walls;
     public org.bukkit.World world;
 
+
+    /*
+    *   positionOne is always the "largest" coordinate, as in worldSize gets added to the origin
+    *   positionTwo is always the "smallest" coordinate, with worldSize being subtracted from the origin
+    *   Example: Origin: (x: 0, z: 0) then
+    *       positionOne: (+worldSize, +worldSize)
+    *       positionTwo: (-worldSize, -worldSize)
+    */
     public int[] positionOne = new int[2];
     public int[] positionTwo = new int[2];
 
@@ -45,11 +53,16 @@ public class World {
             }
         }  
 
-        // Constant (10) is for safety with TNT explosions and other things.
-        for (int x = positionTwo[0] - 10; x < positionOne[0] + 10; x++) {
-            for (int z = positionTwo[1] - 10; z < positionOne[1] + 10; z++) {
+        // Constant safetyBounds is for safety with TNT explosions and other things.
+        int safetyBounds = Config.data.getInt("world.safetyBounds", 3);
+        for (int x = positionTwo[0] - safetyBounds; x < positionOne[0] + safetyBounds; x++) {
+            for (int z = positionTwo[1] - safetyBounds; z < positionOne[1] + safetyBounds; z++) {
                 for (int y = -64; y < 325; y++) {
-                    if (world.getBlockAt(x, y, z).getType() == Material.AIR) continue; // This is to save memory and shorten load times, other files will deal with this if they need (ex: SupplyChest event)
+                    // This is to save memory and shorten load times, other files will deal with this if they need (ex: SupplyChest event)
+                    // Update 1.3.1: Config setting to save air because issues with player placed blocks
+                    if (world.getBlockAt(x, y, z).getType() == Material.AIR && !Config.data.getBoolean("world.saveAir", true)) {
+                        continue;
+                    }
                     originalBlocks.add(new TempBlock(world.getBlockAt(x, y, z).getLocation(), world.getBlockAt(x, y, z).getType()));
                 }
             }

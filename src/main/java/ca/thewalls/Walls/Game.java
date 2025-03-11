@@ -253,6 +253,8 @@ public class Game {
             new BossMan("Boss Man", this.walls);
         if (Config.data.getBoolean("events.itemCheck.enabled"))
             new ItemCheck("Item Check", this.walls);
+        if (Config.data.getBoolean("events.bombingRun.enabled"))
+            new BombingRun("Bombing Run", this.walls);
 
         started = true;
         time = 0;

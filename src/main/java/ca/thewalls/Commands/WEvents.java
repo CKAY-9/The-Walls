@@ -28,7 +28,7 @@ public class WEvents implements CommandExecutor {
         if (Config.data.getBoolean("events.supplyChest.enabled"))
             sender.sendMessage(Utils.formatText("&d  - Supply Chest"));
         if (Config.data.getBoolean("events.gregs.enabled"))
-            sender.sendMessage(Utils.formatText("&d  - Gregs / Exploding Chickens"));
+            sender.sendMessage(Utils.formatText("&d  - Gregs / Free Food"));
         if (Config.data.getBoolean("events.reveal.enabled"))
             sender.sendMessage(Utils.formatText("&d  - Location Reveal"));
         if (Config.data.getBoolean("events.sinkHole.enabled"))
@@ -39,6 +39,8 @@ public class WEvents implements CommandExecutor {
             sender.sendMessage(Utils.formatText("&d  - Boss Man"));
         if (Config.data.getBoolean("events.itemCheck.enabled"))
             sender.sendMessage(Utils.formatText("&d  - Item Check"));
+        if (Config.data.getBoolean("events.bombingRun.enabled"))
+            sender.sendMessage(Utils.formatText("&d  - Bombing Run"));
     }
 
     @Override
