@@ -1,6 +1,7 @@
 package ca.thewalls.Walls;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -17,7 +18,6 @@ public class World {
     public TheWalls walls;
     public org.bukkit.World world;
 
-
     /*
     *   positionOne is always the "largest" coordinate, as in worldSize gets added to the origin
     *   positionTwo is always the "smallest" coordinate, with worldSize being subtracted from the origin
@@ -30,6 +30,7 @@ public class World {
 
     public ArrayList<TempBlock> originalBlocks = new ArrayList<>();
     public ArrayList<TempBlock> originalWallBlocks = new ArrayList<>();
+    public ArrayList<Location> spawnProtectionBlocks = new ArrayList<>();
   
     public World(TheWalls walls) {
         this.walls = walls;
@@ -105,6 +106,7 @@ public class World {
         
         originalWallBlocks.clear(); 
         originalBlocks.clear();
+        spawnProtectionBlocks.clear();
 
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (p.isOp()) {
@@ -151,6 +153,13 @@ public class World {
     public void dropWalls() {
         for (TempBlock wallBlock: originalWallBlocks) {
             world.getBlockAt(wallBlock.loc).setType(wallBlock.block);
+        }
+
+        if (Config.data.getBoolean("teams.clearProtectionBlocksAfterDrop", true)) {
+            for (Location loc : spawnProtectionBlocks) {
+                // Remove protection blocks
+                world.getBlockAt(loc).setType(Material.AIR);
+            }
         }
     }
 

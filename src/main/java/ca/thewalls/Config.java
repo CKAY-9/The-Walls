@@ -59,6 +59,9 @@ public class Config {
                 data.set("events.tnt.enabled", true);
                 data.set("events.tnt.amount", 5);
             }
+            if (!data.isSet("events.tnt.followPlayer")) {
+                data.set("events.tnt.followPlayer", true);
+            }
             if (!data.isSet("events.locationSwap.enabled")) {
                 data.set("events.locationSwap.enabled", true);
             }
@@ -99,6 +102,10 @@ public class Config {
             if (!data.isSet("teams.checkWinEverySecond")) {
                 data.set("teams.checkWinEverySecond", true);
             }
+            if (!data.isSet("teams.clearProtectionBlocksAfterDrop")) {
+                data.set("teams.clearProtectionBlocksAfterDrop", true);
+            }
+
             // world
             if (!data.isSet("world.borderShrinkPercentageOfSize")) {
                 data.set("world.borderShrinkPercentageOfSize", 0.2);
@@ -145,8 +152,7 @@ public class Config {
             }
             if (!data.isSet("events.bombingRun.enabled")) {
                 data.set("events.bombingRun.enabled", true);
-                data.set("events.bombingRun.tntRange", 8);
-                data.set("events.bombingRun.tntDamage", 10);
+                data.set("events.bombingRun.tntPower", 16);
                 data.set("events.bombingRun.tntSpread", 2);
                 data.set("events.bombingRun.alertTime", 5);
                 data.set("events.bombingRun.detonationtime", 10);

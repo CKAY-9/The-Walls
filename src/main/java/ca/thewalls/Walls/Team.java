@@ -107,6 +107,9 @@ public class Team {
                 TempBlock temp = new TempBlock(new Location(this.walls.world.world, teamSpawn.getBlockX() + x, teamSpawn.getBlockY() - 1, teamSpawn.getBlockZ() + z),
                     this.walls.world.world.getBlockAt(teamSpawn.getBlockX() + x, teamSpawn.getBlockY() - 1, teamSpawn.getBlockZ() + z).getType());
                 this.walls.world.originalBlocks.add(temp);
+                if (Config.data.getBoolean("teams.clearProtectionBlocksAfterDrop", true)) {
+                    this.walls.world.spawnProtectionBlocks.add(temp.loc);
+                }
                 this.walls.world.world.getBlockAt(temp.loc).setType(Material.BEDROCK);
             }
         }

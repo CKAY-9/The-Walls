@@ -272,6 +272,7 @@ public class Game {
     public void end(boolean forced, @Nullable Team winningTeam) {
         borderClosing = false;
         wallsFallen = false;
+        started = false;
 
         Bukkit.getScheduler().cancelTask(gameLoopID);
         if (Utils.getPlugin().isEnabled()) {
@@ -313,6 +314,5 @@ public class Game {
         Events.events.clear();
         teams.clear();
         aliveTeams.clear();
-        started = false;
     }
 }

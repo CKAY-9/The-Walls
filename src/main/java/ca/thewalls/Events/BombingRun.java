@@ -5,6 +5,7 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
@@ -43,38 +44,60 @@ class BombingRunHandler {
                     return;
                 }
 
+                // X Pos for TNT
+                int furthestX = walls.world.positionOne[0];
+                int closestX = walls.world.positionTwo[0];
+
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    Location loc = p.getLocation();
+                    int x = loc.getBlockX();
+
+                    if (Math.abs(x) > Math.abs(furthestX)) {
+                        furthestX = x;
+                    }
+                    if (Math.abs(x) < Math.abs(closestX)) {
+                        closestX = x;
+                    }
+                }
+
+                final int xPos;
+
+                if (closestX > furthestX) {
+                    xPos = rand.nextInt(furthestX, closestX);
+                } else {
+                    xPos = rand.nextInt(closestX, furthestX);
+                }
+
+                int timer = Config.data.getInt("events.bombingRun.detonationtime", 10);
+                int power = Config.data.getInt("events.bombingRun.tntPower",  16);
+
                 for (int i = 0; i < totalIterations; i++) {
-                    // X Pos for TNT
-                    int furthestX = walls.world.positionOne[0];
-                    int closestX = walls.world.positionTwo[0];
-
-                    for (Player p : Bukkit.getOnlinePlayers()) {
-                        Location loc = p.getLocation();
-                        int x = loc.getBlockX();
-
-                        if (Math.abs(x) > Math.abs(furthestX)) {
-                            furthestX = x;
-                        }
-                        if (Math.abs(x) < Math.abs(closestX)) {
-                            closestX = x;
-                        }
-                    }
-
-                    int xPos = 0;
-
-                    if (closestX > furthestX) {
-                        xPos = rand.nextInt(furthestX, closestX);
-                    } else {
-                        xPos = rand.nextInt(closestX, furthestX);
-                    }
-
                     Location loc = new Location(walls.world.world, xPos, 325, zPoints[0] + ((i + 1) * tntSpread));
                     TNTPrimed tnt = (TNTPrimed) walls.world.world.spawnEntity(loc, EntityType.PRIMED_TNT);
-                    tnt.setFuseTicks(20 * Config.data.getInt("events.bombingRun.detonationtime", 10));
+                    tnt.setFuseTicks(20 * (timer + 2));
 
                     if (!walls.game.started) {
+                        tnt.teleport(new Location(walls.world.world, 20_000_000, 600, 20_000_000));
                         tnt.remove();
+                        return;
                     }
+
+                    final int iter = i;
+
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(walls, new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!walls.game.started) {
+                                return;
+                            }
+
+                            Block highestBlock = walls.world.world.getHighestBlockAt(xPos, zPoints[0] + ((iter + 1) * tntSpread));
+                            Location highestLoc = highestBlock.getLocation();
+                            walls.world.world.createExplosion(highestLoc, power, true, true);
+                            tnt.teleport(new Location(walls.world.world, 20_000_000, 600, 20_000_000));
+                            tnt.remove();
+                        };
+                    }, 20 * timer);
                 }
             }
         }, 20 * Config.data.getInt("events.bombingRun.alertTime", 5));
