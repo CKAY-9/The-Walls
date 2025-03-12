@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TNTPrimed;
 
 import ca.thewalls.Config;
 import ca.thewalls.TheWalls;
@@ -21,7 +22,12 @@ public class TNTSpawn extends Event {
             p.playSound(p.getLocation(), Sound.ENTITY_TNT_PRIMED, 255, 1);
             if (!Utils.isAlive(p)) continue;
             for (int i = 0; i < Config.data.getInt("events.tnt.amount"); i++) {
-                this.walls.world.world.spawnEntity(p.getLocation(), EntityType.PRIMED_TNT);
+                Bukkit.getScheduler().scheduleSyncDelayedTask(walls, new Runnable() {
+                    @Override
+                    public void run() {
+                        TNTPrimed primed = (TNTPrimed)walls.world.world.spawnEntity(p.getLocation(), EntityType.PRIMED_TNT);
+                    }
+                }, (10 * i));
             }
         }
     }
