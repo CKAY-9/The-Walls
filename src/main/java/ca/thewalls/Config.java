@@ -1,12 +1,12 @@
 package ca.thewalls;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class Config {
     public static File dataFile;
@@ -149,20 +149,32 @@ public class Config {
             }
             if (!data.isSet("events.itemCheck.enabled")) {
                 data.set("events.itemCheck.enabled", true);
-                data.set("events.itemCheck.timeLimit", 30);
             }
             if (!data.isSet("events.itemCheck.materials")) {
-                // default materials for item check
-                ArrayList<String> mats = new ArrayList<>();
-                mats.add("DIRT");
-                mats.add("OAK_LOG");
-                mats.add("DIAMOND");
-                mats.add("STONE");
-                mats.add("COBBLESTONE");
-                mats.add("STRING");
-                mats.add("LAPIS_LAZULI");
+                /*
+                    Item check layout
+                    events
+                        -> itemCheck
+                            -> materials
+                                -> some_id
+                                    -> material: OAK_LOG
+                                    -> quantity: 4
+                                    -> time: 30 (seconds)
+                */
 
-                data.set("events.itemCheck.materials", mats);
+                data.set("events.itemCheck.materials.oak_log.material", "OAK_LOG"); // initialize sec
+                ConfigurationSection sec = data.getConfigurationSection("events.itemCheck.materials");
+
+                sec.set("oak_log.quantity", 16);
+                sec.set("oak_log.time", 30);  
+                
+                sec.set("diamonds.material", "DIAMOND");
+                sec.set("diamonds.quantity", 8);
+                sec.set("diamonds.time", 120);  
+
+                sec.set("cobblestone.material", "COBBLESTONE");
+                sec.set("cobblestone.quantity", 64);
+                sec.set("cobblestone.time", 60);  
             }
             if (!data.isSet("events.bombingRun.enabled")) {
                 data.set("events.bombingRun.enabled", true);
